@@ -31,6 +31,7 @@ const Navbar = () => {
               </div>
             </Container>
           </div>
+          
         </div>
     );
 }
