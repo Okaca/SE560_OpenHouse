@@ -32,7 +32,7 @@ const RegisterModal = () => {
             name: '',
             email: '',
             password: ''
-        }
+        },
     });
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
@@ -67,7 +67,7 @@ const RegisterModal = () => {
             />
 
             <Input 
-                id="ad_soyad" // TODO: 
+                id="name" // TODO: 
                 label="Ad/Soyad" // TODO:
                 disabled={isLoading}
                 register={register}
