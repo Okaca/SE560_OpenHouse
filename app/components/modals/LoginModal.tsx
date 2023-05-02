@@ -110,7 +110,7 @@ const LoginModal = () => {
       />
       <div className="
       text-neutral-500 text-center mt-4 font-light">
-        <p>OpenHouse'a ilk ziyaretin mi?
+        <p>Buralarda yeni misin?
           <span 
             onClick={onToggle} 
             className="
