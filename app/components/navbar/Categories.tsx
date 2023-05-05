@@ -2,12 +2,12 @@
 
 import Container from "../Container";
 
-import { TbHome, TbBus } from "react-icons/tb";
-import { GiCampingTent } from "react-icons/gi";
+import { TbHome, TbBus, TbSpeedboat } from "react-icons/tb";
+import { GiCampingTent, GiCargoCrate } from "react-icons/gi";
 import { FaHotel } from "react-icons/fa";
 import { MdOutlineNightShelter, MdOutlineBungalow, MdApartment, MdOutlineMosque } from "react-icons/md"
 import { AiFillCar } from "react-icons/ai";
-import { RiBus2Line } from "react-icons/ri";
+import { RiBus2Line, RiShipLine } from "react-icons/ri";
 import { BsBuildings } from "react-icons/bs";
 import CategoryBox from "../CategoryBox";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -18,6 +18,21 @@ export const categories = [
         label: 'Çadır',
         icon: GiCampingTent,
         description: 'Barınma tipi Çadır!'
+    },
+    {
+        label: 'Konteyner',
+        icon: GiCargoCrate,
+        description: 'Barınma tipi Konteyner!'
+    },
+    {
+        label: 'Tekne',
+        icon: TbSpeedboat,
+        description: 'Barınma tipi Tekne!'
+    },
+    {
+        label: 'Gemi',
+        icon: RiShipLine,
+        description: 'Barınma tipi Gemi!'
     },
     {
         label: 'Ev',
