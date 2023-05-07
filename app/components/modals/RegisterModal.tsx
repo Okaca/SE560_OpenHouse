@@ -47,7 +47,7 @@ const RegisterModal = () => {
                 registerModal.onClose();
             })
             .catch((error) => {
-                toast.error('Hata oluştu.. Üzgünüz :('); // TODO: 
+                toast.error('Üzgünüz. Hata oluştu :('); // TODO: 
             })
             .finally(() => {
                 setIsLoading(false);
