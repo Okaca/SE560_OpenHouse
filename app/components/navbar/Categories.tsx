@@ -94,7 +94,7 @@ const Categories = () => {
     const params = useSearchParams();
     const category = params?.get('category');
     const pathname = usePathname();
-    const isMainPage = pathname === '/';
+    const isMainPage = pathname == '/';
 
     if (!isMainPage) {
         return null;
@@ -117,7 +117,7 @@ const Categories = () => {
                         key={item.label}
                         label={item.label}
                         icon={item.icon}
-                        selected={category === item.label}
+                        selected={category == item.label}
                     />
                 ))}
             </div>
