@@ -10,6 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model User {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
   name            String?
@@ -24,6 +25,7 @@ model User {
   accounts Account[]
   listings Listing[]
   reservations Reservation[]
+
 }
 
 model Account {
@@ -74,4 +76,5 @@ model Reservation {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
 }
