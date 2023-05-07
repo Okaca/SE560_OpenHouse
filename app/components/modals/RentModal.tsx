@@ -9,6 +9,7 @@ import CategoryInput from "../inputs/CategoryInput";
 import { FieldValues, useForm } from "react-hook-form";
 import CountrySelect from "../inputs/CountrySelect";
 import dynamic from "next/dynamic";
+import Counter from "../inputs/Counter";
 
 enum STEPS {
     CATEGORY = 0,
@@ -49,6 +50,9 @@ const RentModal = () => {
 
     const category = watch('category');
     const location = watch('location');
+    const guestCount = watch('guestCount');
+    const roomCount = watch('roomCount');
+    const bathroomCount = watch('bathroomCount');
 
     const Map = useMemo(() => dynamic(() => import('../Map'), {
         ssr: false
@@ -91,8 +95,8 @@ const RentModal = () => {
     let bodyContent = (
         <div className="flex flex-col gap-8">
             <Heading 
-                title="En uygun kategoriyi seçiniz?"
-                subtitle="Lütfen bir kategori seçiniz"
+                title="Kategori seçiniz"
+                subtitle="Lütfen oluşturmak istediğiniz barınma seçeneğinin tipini belirtiniz"
             />
             <div
                 className="
@@ -124,7 +128,7 @@ const RentModal = () => {
             <div className="flex flex-col gap-8">
                 <Heading 
                     title="Konum giriniz"
-                    subtitle="Lütfen konum belirtiniz"
+                    subtitle="Lütfen oluşturmak istediğiniz barınma seçeneğinin konumunu belirtiniz"
                 />
                 <CountrySelect 
                     value={location}
@@ -132,6 +136,37 @@ const RentModal = () => {
                 />
                 <Map 
                     center={location?.latlng} 
+                />
+            </div>
+        );
+    }
+
+    if (step === STEPS.INFO) {
+        bodyContent = (
+            <div className="flex flex-col gap-8">
+                <Heading 
+                    title="Temel bilgiler giriniz"
+                    subtitle="Lütfen oluşturmak istediğiniz barınma seçeneğine ait özellikleri belirtiniz"
+                />
+                <Counter 
+                    title="Misafir"
+                    subtitle="Toplam kişi kapasitesi"
+                    value={guestCount}
+                    onChange={(value) => setCustomValue('guestCount', value)}
+                />
+                <hr />
+                <Counter 
+                    title="Oda"
+                    subtitle="Toplam oda sayısı"
+                    value={roomCount}
+                    onChange={(value) => setCustomValue('roomCount', value)}
+                />
+                <hr />
+                <Counter 
+                    title="Banyo"
+                    subtitle="Toplam banyo sayısı"
+                    value={bathroomCount}
+                    onChange={(value) => setCustomValue('bathroomCount', value)}
                 />
             </div>
         );
