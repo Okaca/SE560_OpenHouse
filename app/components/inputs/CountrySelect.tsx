@@ -34,7 +34,7 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
                     <div className="flex flex-row items-center gap-3">
                         <div>{option.flag}</div>
                         <div>
-                            {option.flag},
+                            {option.label},
                             <span className="text-neutral-500 ml-1">
                                 {option.region}
                             </span>
@@ -57,7 +57,7 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
                 })}
             />
         </div>
-     );
+    );
 }
  
 export default CountrySelect;
