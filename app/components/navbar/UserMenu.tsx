@@ -102,19 +102,19 @@ const UserMenu: React.FC<UserMenuProps> = ({
                         <>
                             <MenuItem 
                                 onClick={() => {}}
-                                label='My trips' // TODO: TR 
+                                label='Open House Hakkında' // TODO: TR 
                             />
                             <MenuItem 
                                 onClick={() => {}}
-                                label='My favorites' // TODO: TR 
+                                label='Favorilerim' // TODO: TR 
                             />
                             <MenuItem 
                                 onClick={() => {}}
-                                label='My reservations' // TODO: TR 
+                                label='Paylaşımlarım' // TODO: TR 
                             />
                             <MenuItem 
                                 onClick={() => {}}
-                                label='My properties' // TODO: TR 
+                                label='Ayarlarım' // TODO: TR 
                             />
                             <MenuItem 
                                 onClick={rentModal.onOpen}
