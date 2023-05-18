@@ -61,12 +61,12 @@ const ListingCard: React.FC<ListingCardProps> = ({
         const start = new Date(reservation.startDate);
         const end = new Date(reservation.endDate);
 
-        return "${format(start, 'PP')} - ${format(end, 'PP')}"
+        return `${format(start, 'PP')} - ${format(end, 'PP')}`
     }, [reservation]);
 
     return (
         <div
-            onClick={() => router.push('/listings/${data.id}')}
+            onClick={() => router.push(`/listings/${data.id}`)}
             className="
                 col-span-1 cursor-pointer group
             "
