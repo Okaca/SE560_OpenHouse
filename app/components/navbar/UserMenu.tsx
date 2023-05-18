@@ -106,7 +106,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
                             />
                             <MenuItem 
                                 onClick={() => {}}
-                                label='Favorilerim' // TODO: TR 
+                                label='Kaydettiklerim' // TODO: TR 
                             />
                             <MenuItem 
                                 onClick={() => {}}
