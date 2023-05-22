@@ -107,7 +107,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
                                 label='Open House Hakkında' // TODO: TR 
                             />
                             <MenuItem 
-                                onClick={() => router.push("/trips")}
+                                onClick={() => {}} // onClick={() => router.push("/trips")}
                                 label='Misafirliklerim' // TODO: TR 
                             />
                             <MenuItem 
@@ -115,7 +115,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
                                 label='Kaydettiklerim' // TODO: TR 
                             />
                             <MenuItem 
-                                onClick={() => router.push("/reservations")}
+                                onClick={() => {}} // onClick={() => router.push("/reservations")}
                                 label='Rezervasyonlarım' // TODO: TR 
                             />
                             <MenuItem 
