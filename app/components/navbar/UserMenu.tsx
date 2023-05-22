@@ -107,24 +107,12 @@ const UserMenu: React.FC<UserMenuProps> = ({
                                 label='Open House Hakkında' // TODO: TR 
                             />
                             <MenuItem 
-                                onClick={() => {}} // onClick={() => router.push("/trips")}
-                                label='Misafirliklerim' // TODO: TR 
-                            />
-                            <MenuItem 
                                 onClick={() => router.push('/favorites')}
                                 label='Kaydettiklerim' // TODO: TR 
                             />
                             <MenuItem 
-                                onClick={() => {}} // onClick={() => router.push("/reservations")}
-                                label='Rezervasyonlarım' // TODO: TR 
-                            />
-                            <MenuItem 
-                                onClick={() => {}}
+                                onClick={() => router.push("/properties")}
                                 label='Paylaşımlarım' // TODO: TR 
-                            />
-                            <MenuItem 
-                                onClick={() => {}}
-                                label='Ayarlarım' // TODO: TR 
                             />
                             <MenuItem 
                                 onClick={rentModal.onOpen}
