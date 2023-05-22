@@ -111,7 +111,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
                                 label='Misafirliklerim' // TODO: TR 
                             />
                             <MenuItem 
-                                onClick={() => {}}
+                                onClick={() => router.push('/favorites')}
                                 label='Kaydettiklerim' // TODO: TR 
                             />
                             <MenuItem 
