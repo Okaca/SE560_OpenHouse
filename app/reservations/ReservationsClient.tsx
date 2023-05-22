@@ -1,21 +1,22 @@
 'use client';
 
+import { toast } from "react-hot-toast";
+import axios from "axios";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import Container from "../components/Container";
-import Heading from "../components/Heading";
 import { SafeReservation, SafeUser } from "../types";
-import { useCallback, useState } from "react";
-import axios from "axios";
-import { toast } from "react-hot-toast";
+
+import Heading from "../components/Heading";
+import Container from "../components/Container";
 import ListingCard from "../components/listings/ListingCard";
 
-interface TripsClientProps {
+interface ReservationsClientProps {
     reservations: SafeReservation[];
     currentUser?: SafeUser | null;
 }
 
-const TripsClient: React.FC<TripsClientProps> = ({
+const ReservationsClient: React.FC<ReservationsClientProps> = ({
     reservations,
     currentUser
 }) => {
@@ -27,22 +28,22 @@ const TripsClient: React.FC<TripsClientProps> = ({
 
         axios.delete(`/api/reservations/${id}`)
         .then(() => {
-            toast.success('Rezervasyon iptal edildi');
+            toast.success("Rezervasyon iptal edildi");
             router.refresh();
         })
-        .catch((error) => {
-            toast.error(error?.response?.data?.error);
+        .catch(() => {
+            toast.error('Bir hata oluştu');
         })
         .finally(() => {
             setDeletingId('');
-        });
+        })
     }, [router]);
 
     return (
         <Container>
             <Heading 
-                title="Misafirliklerim"
-                subtitle="Geçmiş misafirliklerim ve gelecek rezervasyonlarım"
+                title="Reservasyonlar"
+                subtitle=""
             />
             <div
                 className="
@@ -65,7 +66,7 @@ const TripsClient: React.FC<TripsClientProps> = ({
                         actionId={reservation.id}
                         onAction={onCancel}
                         disabled={deletingId === reservation.id}
-                        actionLabel="Rezervasyon iptali"
+                        actionLabel="Misafir rezervasyonunu iptal et"
                         currentUser={currentUser}
                     />
                 ))}
@@ -74,4 +75,4 @@ const TripsClient: React.FC<TripsClientProps> = ({
     );
 }
 
-export default TripsClient;
+export default ReservationsClient;

@@ -53,7 +53,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
             <div className='p-4'>
                 <Button 
                     disabled={disabled}
-                    label={'Reservasyon Yap'} // TODO: istek gönder gibi bir şeye dönüştürülebilir
+                    label={'Rezervasyon Yap'} // TODO: istek gönder gibi bir şeye dönüştürülebilir
                     onClick={onSubmit}
                 />
             </div>

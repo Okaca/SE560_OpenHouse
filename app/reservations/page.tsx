@@ -3,24 +3,24 @@ import ClientOnly from "../components/ClientOnly";
 
 import getCurrentUser from "../actions/getCurrentUser";
 import getReservations from "../actions/getReservations";
-import TripsClient from "./TripsClient";
+import ReservationsClient from "./ReservationsClient";
 
-const TripsPage = async () => {
+const ReservationsPage = async () => {
     const currentUser = await getCurrentUser();
 
     if (!currentUser) {
         return (
             <ClientOnly>
                 <EmptyState 
-                    title="Yetkisiz İşlem"
-                    subtitle="Lütfen Giriş Yapın"
+                    title="Yetkisiz işlem"
+                    subtitle="Lüffen giriş yapın"
                 />
-            </ClientOnly> 
-        )
+            </ClientOnly>
+        );
     }
 
     const reservations = await getReservations({
-        userId: currentUser.id
+        authorId: currentUser.id
     });
 
     if (reservations.length === 0) {
@@ -36,12 +36,12 @@ const TripsPage = async () => {
 
     return (
         <ClientOnly>
-            <TripsClient 
+            <ReservationsClient 
                 reservations={reservations}
                 currentUser={currentUser}
             />
         </ClientOnly>
     )
-}
+};
 
-export default TripsPage;
+export default ReservationsPage;
