@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
 import L from "leaflet";
-import { MapContainer, Marker, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
@@ -11,36 +11,33 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-    iconUrl: markerIcon.src,
-    iconRetinaUrl: markerIcon2x.src,
-    shadowUrl: markerShadow.src
+  iconUrl: markerIcon.src,
+  iconRetinaUrl: markerIcon2x.src,
+  shadowUrl: markerShadow.src,
 });
 
 interface MapProps {
-    center?: number[]
+  center?: number[];
 }
 
-const Map: React.FC<MapProps> = ({
-    center
-}) => {
-    return (
-        <MapContainer
-            center={center as L.LatLngExpression || [39.9, 32.8]}
-            zoom={center ? 4 : 2}
-            scrollWheelZoom={false}
-            className='h-[25vh] rounded-lg'
-        >
-            <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {center && (
-                <Marker 
-                    position={center as L.LatLngExpression}
-                />
-            )}
-        </MapContainer>
-    )
+const Map: React.FC<MapProps> = ({ center }) => {
+  console.log(`Map: ${center}`);
+  return (
+    <MapContainer
+      center={(center as L.LatLngExpression) || [39.925533, 32.866287]}
+      zoom={center ? 9 : 6}
+      scrollWheelZoom={true}
+      className="h-[50vh] rounded-lg"
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      {center && (
+        <Marker draggable={true} position={center as L.LatLngExpression} />
+      )}
+    </MapContainer>
+  );
 };
 
 export default Map;

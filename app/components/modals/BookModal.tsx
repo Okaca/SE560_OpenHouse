@@ -7,7 +7,6 @@ import Heading from "../Heading";
 import { categories } from "../navbar/Categories";
 import CategoryInput from "../inputs/CategoryInput";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import CountrySelect from "../inputs/CountrySelect";
 import dynamic from "next/dynamic";
 import Counter from "../inputs/Counter";
 import ImageUpload from "../inputs/ImageUpload";
@@ -15,6 +14,9 @@ import Input from "../inputs/Input";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { OutLinedInput } from "@material-ui/core/OutLinedInput";
+// import CitySelect from "../inputs/CitySelect";
+// import TownSelect from "../inputs/TownSelect";
 
 enum STEPS {
   CATEGORY = 0,
@@ -22,7 +24,6 @@ enum STEPS {
   INFO = 2,
   IMAGES = 3,
   DESCRIPTION = 4,
-  PRICE = 5,
 }
 
 const BookModal = () => {
@@ -47,7 +48,6 @@ const BookModal = () => {
       roomCount: 1,
       bathroomCount: 1,
       imageSrc: "",
-      price: 1,
       title: "",
       description: "",
     },
@@ -85,7 +85,12 @@ const BookModal = () => {
   };
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    if (step !== STEPS.PRICE) {
+    if (step === STEPS.CATEGORY && !data.category) {
+      toast.error("Lütfen bir kategori seçin."); // Display error toast
+      return;
+    }
+
+    if (step !== STEPS.DESCRIPTION) {
       // last step
       return onNext();
     }
@@ -110,22 +115,28 @@ const BookModal = () => {
   };
 
   const actionLabel = useMemo(() => {
-    if (step === STEPS.PRICE) {
+    if (step === STEPS.DESCRIPTION) {
       // STEPS.last_element
       return "Oluştur";
     }
-
     return "İleri";
   }, [step]);
 
   const secondaryActionLabel = useMemo(() => {
     if (step === STEPS.CATEGORY) {
       // STEPS.first_element
-      return undefined;
+      return "Kapat";
     }
-
     return "Geri";
   }, [step]);
+
+  const secondaryAction = () => {
+    if (step === STEPS.CATEGORY) {
+      reset();
+      return bookModal.onClose();
+    }
+    return onBack();
+  };
 
   let bodyContent = (
     <div className="flex flex-col gap-8">
@@ -164,10 +175,18 @@ const BookModal = () => {
           title="Konum giriniz"
           subtitle="Lütfen oluşturmak istediğiniz barınma seçeneğinin konumunu belirtiniz"
         />
-        <CountrySelect
-          value={location}
-          onChange={(value) => setCustomValue("location", value)}
+        {/* <CitySelect
+          value={cityLocation}
+          onChange={(value) => setCustomValue("cityLocation", value)}
         />
+        {cityLocation && (
+          <TownSelect
+            city={cityLocation?.name}
+            value={townLocation}
+            onChange={(value) => setCustomValue("townLocation", value)}
+          /> */}
+          <OutLinedInput/>
+        )}
         <Map center={location?.latlng} />
       </div>
     );
@@ -247,7 +266,7 @@ const BookModal = () => {
     );
   }
 
-  if (step === STEPS.PRICE) {
+  /*if (step === STEPS.PRICE) {
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading
@@ -266,7 +285,7 @@ const BookModal = () => {
         />
       </div>
     );
-  }
+  }*/
 
   return (
     <Modal
@@ -275,7 +294,7 @@ const BookModal = () => {
       onSubmit={handleSubmit(onSubmit)}
       actionLabel={actionLabel}
       secondaryActionLabel={secondaryActionLabel}
-      secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
+      secondaryAction={secondaryAction}
       title="Open House - Geçici Barınma Paylaş"
       body={bodyContent}
     />
