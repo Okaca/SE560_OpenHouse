@@ -61,9 +61,30 @@ const Modal: React.FC<ModalProps> = ({
     }, 300); // TODO: 300 milliseconds -> for animations
   }, [disabled, onClose]); // these are dependencies
 
-  const handleSubmit = useCallback(() => {
-    if (disabled) {
-      return;
+        setShowModal(false);
+        setTimeout(() => {
+            onClose();
+        }, 300); // TODO: 300 milliseconds -> for animations
+    }, [disabled, onClose]); // these are dependencies
+
+    const handleSubmit = useCallback(() => {
+        if (disabled) {
+            return;
+        }
+
+        onSubmit();
+    }, [disabled, onSubmit]);
+
+    const handleSecondaryAction = useCallback(() => {
+        if (disabled || !secondaryAction) {
+            return;
+        }
+
+        secondaryAction();
+    }, [disabled, secondaryAction]);
+
+    if (!isOpen) {
+        return null;
     }
 
     onSubmit();
@@ -202,11 +223,8 @@ const Modal: React.FC<ModalProps> = ({
                 {footer}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
+        </>   
+    );
+}
 
 export default Modal;

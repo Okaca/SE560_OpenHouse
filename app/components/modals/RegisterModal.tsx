@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import axios from "axios";
 import { AiFillGithub } from "react-icons/ai";
@@ -21,17 +21,19 @@ const RegisterModal = () => {
   const loginModal = useLoginModal();
   const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FieldValues>({
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-    },
-  });
+    const {
+        register,
+        handleSubmit,
+        formState: {
+            errors,
+        }
+    } = useForm<FieldValues>({
+        defaultValues: {
+            name: '',
+            email: '',
+            password: ''
+        },
+    });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
@@ -141,5 +143,67 @@ const RegisterModal = () => {
     />
   );
 };
+
+    const footerContent = (
+        <div className='flex flex-col gap-4 mt-3'>
+            <hr />
+            <Button 
+                outline
+                label='Google ile devam etmek için tıklayın' // TODO: 
+                icon={FcGoogle}
+                onClick={() => signIn('google')}
+            />
+
+            <Button 
+                outline
+                label='Github ile devam etmek için tıklayın' // TODO: 
+                icon={AiFillGithub}
+                onClick={() => signIn('github')}
+            />
+
+            <div 
+                className='
+                    text-neutral-500
+                    text-center
+                    mt-4
+                    font-light
+                '
+            >
+                <div className='justify-center flex flex-row items-center gap-2'>
+                    <div>
+                        Hesabınız var mı?
+                    </div>
+
+                    <div
+                    onClick={onToggle}
+                        className='
+                            text-neutral-800
+                            cursor-pointer
+                            hover:underline
+                        '
+                    >
+                        Giriş yapın
+                    </div>
+
+                </div>
+            
+            </div>
+
+        </div>
+    );
+
+    return(
+        <Modal
+            disabled={isLoading} 
+            isOpen={registerModal.isOpen}
+            title="Kayıt Ol" // TODO: 
+            actionLabel="Devam Et" // TODO: 
+            onClose={registerModal.onClose}
+            onSubmit={handleSubmit(onSubmit)}
+            body={bodyContent}
+            footer={footerContent}
+        />
+    );
+}
 
 export default RegisterModal;
