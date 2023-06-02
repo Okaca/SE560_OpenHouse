@@ -10,6 +10,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  tableOnly = true
+  erdDebug = true
+  output = "./prisma/ERD.png"
+  
+}
 
 model User {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
@@ -59,7 +66,6 @@ model Listing {
   guestCount Int
   locationValue Int[]
   userId String @db.ObjectId
-  price Int
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   reservations Reservation[]
