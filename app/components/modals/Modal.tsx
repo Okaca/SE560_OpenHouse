@@ -1,3 +1,5 @@
+"use client"; // because we use useState
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import Button from "../Button";

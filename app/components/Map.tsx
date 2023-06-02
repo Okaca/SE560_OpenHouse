@@ -1,4 +1,5 @@
 "use client";
+"use client";
 
 import { useRef, useEffect, useState } from "react";
 import L from "leaflet";
@@ -12,6 +13,9 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon.src,
+  iconRetinaUrl: markerIcon2x.src,
+  shadowUrl: markerShadow.src,
   iconUrl: markerIcon.src,
   iconRetinaUrl: markerIcon2x.src,
   shadowUrl: markerShadow.src,
