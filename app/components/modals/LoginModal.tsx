@@ -1,5 +1,4 @@
 "use client";
-"use client";
 
 import { useCallback, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -24,31 +23,21 @@ const LoginModal = () => {
 
   const {
     register,
-  const {
-    register,
     handleSubmit,
-    formState: { errors },
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      email: "",
-      password: "",
       email: "",
       password: "",
     },
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
     signIn("credentials", {
       ...data,
-    signIn("credentials", {
-      ...data,
       redirect: false,
-    }).then((callback) => {
     }).then((callback) => {
       setIsLoading(false);
 
@@ -58,12 +47,10 @@ const LoginModal = () => {
         loginModal.onClose();
       }
 
-
       if (callback?.error) {
         toast.error(callback.error);
       }
     });
-  };
   };
 
   const onToggle = useCallback(() => {
@@ -73,15 +60,11 @@ const LoginModal = () => {
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
-      <Heading
-        title="OpenHouse'a Hoş Geldiniz"
-        subtitle="Hesabına giriş yap!"
-      />
+      <Heading title="Tekrar Hoşgeldin :)" subtitle="Hesabına giriş yap!" />
       <Input
         id="email"
         label="Email"
         disabled={isLoading}
-        register={register}
         register={register}
         errors={errors}
         required
@@ -97,18 +80,14 @@ const LoginModal = () => {
       />
     </div>
   );
-  );
 
   const footerContent = (
     <div className="flex flex-col gap-4 mt-3">
       <hr />
       <Button
         outline
-      <Button
-        outline
         label="Google ile devam et"
         icon={FcGoogle}
-        onClick={() => signIn("google")}
         onClick={() => signIn("google")}
       />
 
@@ -125,10 +104,6 @@ const LoginModal = () => {
               cursor-pointer 
               hover:underline
             "
-          >
-            {" "}
-            Hesap oluştur
-          </span>
           >
             {" "}
             Hesap oluştur
@@ -151,7 +126,5 @@ const LoginModal = () => {
     />
   );
 };
-};
 
 export default LoginModal;
-

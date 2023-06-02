@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { BiSearch } from 'react-icons/bi';
+import { BiSearch } from "react-icons/bi";
 
 const Search = () => {
-    return(
-        <div
-            className="
+  return (
+    <div
+      className="
                 border-[1px]
                 w-full
                 md:w-auto
@@ -16,27 +16,27 @@ const Search = () => {
                 transition
                 cursor-pointer
             "
-        >
-            <div
-                className="
+    >
+      <div
+        className="
                     flex
                     flex-row
                     items-center
                     justify-between
                 "
-            >
-                <div
-                    className="
+      >
+        <div
+          className="
                         text-sm
                         font-semibold
                         px-6   
                     "
-                >
-                    Konum 
-                </div>
-                
-                <div
-                    className="
+        >
+          Konum
+        </div>
+
+        <div
+          className="
                         hidden
                         sm:block
                         text-sm
@@ -46,12 +46,12 @@ const Search = () => {
                         flex-1
                         text-center
                     "
-                >
-                    Zaman
-                </div>
+        >
+          Zaman
+        </div>
 
-                <div
-                    className="
+        <div
+          className="
                         text-sm
                         pl-6
                         pr-2
@@ -61,25 +61,22 @@ const Search = () => {
                         items-center
                         gap-3
                     "
-                >
-                    <div className="hidden sm:block">Kişi ekleyin</div>                    
-                    <div
-                        className="
+        >
+          <div className="hidden sm:block">Kişi ekleyin</div>
+          <div
+            className="
                             p-2
                             bg-rose-500
                             rounded-full
                             text-white
                         "
-                    >
-                        <BiSearch size={18} />
-                    </div>
-
-                </div>
-
-            </div>
-
+          >
+            <BiSearch size={18} />
+          </div>
         </div>
-    );
-}
+      </div>
+    </div>
+  );
+};
 
 export default Search;

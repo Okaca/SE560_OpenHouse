@@ -4,7 +4,7 @@ import Container from "../Container";
 
 import { TbHome, TbBus, TbSpeedboat } from "react-icons/tb";
 import { GiCampingTent, GiCargoCrate } from "react-icons/gi";
-import { FaHotel } from "react-icons/fa";
+import { FaHotel, FaCaravan } from "react-icons/fa";
 import {
   MdOutlineNightShelter,
   MdOutlineBungalow,
@@ -16,7 +16,6 @@ import { RiBus2Line, RiShipLine } from "react-icons/ri";
 import { BsBuildings } from "react-icons/bs";
 import CategoryBox from "../CategoryBox";
 import { usePathname, useSearchParams } from "next/navigation";
-// import { FaHotel } from "react-icons/md";
 
 export const categories = [
   {
@@ -45,9 +44,24 @@ export const categories = [
     description: "Barınma tipi Ev!",
   },
   {
+    label: "Otomobil",
+    icon: AiFillCar,
+    description: "Barınma tipi Otomobil!",
+  },
+  {
+    label: "Minibüs",
+    icon: TbBus,
+    description: "Barınma tipi Minibüs!",
+  },
+  {
     label: "Otobüs",
     icon: RiBus2Line,
     description: "Barınma tipi Otobüs!",
+  },
+  {
+    label: "Karavan",
+    icon: FaCaravan,
+    description: "Barınma tipi Karavan!",
   },
   {
     label: "Otel",
