@@ -90,6 +90,10 @@ const RentModal = () => {
       toast.error("Kategori seçilmeden ilerlenemez!");
       return;
     }
+    if (step === STEPS.LOCATION && !location) {
+      toast.error("Konum seçilmeden ilerlenemez!");
+      return;
+    }
     if (step !== STEPS.PRICE) {
       // last step
       return onNext();

@@ -46,7 +46,6 @@ const Map: React.FC<MapProps> = ({ center, onMarkerPositionChange }) => {
         };
         marker.on("dragend", updateMarkerPosition);
       }
-
       map.on("zoomend", handleZoomEnd);
       return () => {
         map.off("zoomend", handleZoomEnd);
