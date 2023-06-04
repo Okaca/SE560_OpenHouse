@@ -20,15 +20,20 @@ import AddressTown from "../inputs/AddressTown";
 import AddressDistrict from "../inputs/AddressDistrict";
 import AddressNeighborhood from "../inputs/AddressesNeighborhood";
 import AddressDetails from "../inputs/AddressDetails";
+import CarMake from "../inputs/CarMake";
+import CarModel from "../inputs/CarModel";
+import CarCategory from "../inputs/CarCategory";
+import { Checkbox, FormControlLabel, TextField } from "@mui/material";
 
 enum STEPS {
   CATEGORY = 0,
   LOCATION = 1,
   ADDRESS = 2,
-  INFO = 3,
-  IMAGES = 4,
-  DESCRIPTION = 5,
-  START_AND_END_DATE = 6,
+  CARSPECS = 3,
+  INFO = 4,
+  IMAGES = 5,
+  DESCRIPTION = 6,
+  START_AND_END_DATE = 7,
 }
 
 const RentModal = () => {
@@ -56,6 +61,13 @@ const RentModal = () => {
         neighborhoodName: "",
         details: "",
       },
+      car: {
+        make: "",
+        model: "",
+        category: "",
+        year: 0,
+        isACworking: false,
+      },
       guestCount: 1,
       roomCount: 1,
       bathroomCount: 1,
@@ -68,12 +80,16 @@ const RentModal = () => {
 
   const category = watch("category");
   const location = watch("location");
+
   const cityName = watch("address.cityName");
   const townName = watch("address.townName");
   const districtName = watch("address.districtName");
   const neighborhoodName = watch("address.neighborhoodName");
   const details = watch("address.details");
   const address = watch("address");
+
+  const car = watch("car");
+
   const guestCount = watch("guestCount");
   const roomCount = watch("roomCount");
   const bathroomCount = watch("bathroomCount");
@@ -246,6 +262,63 @@ const RentModal = () => {
         />
 
         <>{JSON.stringify(address)}</>
+      </div>
+    );
+  }
+
+  if (step === STEPS.CARSPECS) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Araç Modeli Giriniz"
+          subtitle="Lütfen aracın özelliklerini ekleyiniz"
+        />
+        <CarMake
+          make={car.make}
+          onChange={(value) => {
+            setCustomValue("car.make", value);
+          }}
+        />
+        <CarModel
+          make={car.make}
+          model={car.model}
+          onChange={(value) => {
+            setCustomValue("car.model", value);
+          }}
+        />
+        <CarCategory
+          value={car.category}
+          onChange={(value) => {
+            setCustomValue("car.category", value);
+          }}
+        />
+        <div>
+          <TextField
+            className="px-8"
+            label="Araç yapım yılı"
+            variant="outlined"
+            type="number"
+            value={car.year}
+            onChange={(event) => {
+              Number(event.target.value);
+              setCustomValue("car.year", event.target.value);
+            }}
+          />
+          <FormControlLabel
+            className="px-8 py-5"
+            control={
+              <Checkbox
+                checked={car.isACworking}
+                onChange={(e) => {
+                  setCustomValue("car.isACworking", !car.isACworking);
+                }}
+              />
+            }
+            label="Klima çalışıyor mu"
+          />
+        </div>
+
+        <>{JSON.stringify(car)}</>
       </div>
     );
   }
