@@ -14,16 +14,21 @@ import Input from "../inputs/Input";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import CitySelect from "../inputs/CitySelect";
 import LocationSelect from "../inputs/LocationSelect";
+import AddressCity from "../inputs/AddressCity";
+import AddressTown from "../inputs/AddressTown";
+import AddressDistrict from "../inputs/AddressDistrict";
+import AddressNeighborhood from "../inputs/AddressesNeighborhood";
+import AddressDetails from "../inputs/AddressDetails";
 
 enum STEPS {
   CATEGORY = 0,
   LOCATION = 1,
-  INFO = 2,
-  IMAGES = 3,
-  DESCRIPTION = 4,
-  PRICE = 5,
+  ADDRESS = 2,
+  INFO = 3,
+  IMAGES = 4,
+  DESCRIPTION = 5,
+  START_AND_END_DATE = 6,
 }
 
 const RentModal = () => {
@@ -44,6 +49,13 @@ const RentModal = () => {
     defaultValues: {
       category: "",
       location: null,
+      address: {
+        cityName: "",
+        townName: "",
+        districtName: "",
+        neighborhoodName: "",
+        details: "",
+      },
       guestCount: 1,
       roomCount: 1,
       bathroomCount: 1,
@@ -56,6 +68,12 @@ const RentModal = () => {
 
   const category = watch("category");
   const location = watch("location");
+  const cityName = watch("address.cityName");
+  const townName = watch("address.townName");
+  const districtName = watch("address.districtName");
+  const neighborhoodName = watch("address.neighborhoodName");
+  const details = watch("address.details");
+  const address = watch("address");
   const guestCount = watch("guestCount");
   const roomCount = watch("roomCount");
   const bathroomCount = watch("bathroomCount");
@@ -94,7 +112,7 @@ const RentModal = () => {
       toast.error("Konum seçilmeden ilerlenemez!");
       return;
     }
-    if (step !== STEPS.PRICE) {
+    if (step !== STEPS.START_AND_END_DATE) {
       // last step
       return onNext();
     }
@@ -119,7 +137,7 @@ const RentModal = () => {
   };
 
   const actionLabel = useMemo(() => {
-    if (step === STEPS.PRICE) {
+    if (step === STEPS.START_AND_END_DATE) {
       // STEPS.last_element
       return "Oluştur";
     }
@@ -183,6 +201,51 @@ const RentModal = () => {
           center={location}
           onMarkerPositionChange={(value) => setCustomValue("location", value)}
         />
+      </div>
+    );
+  }
+
+  if (step === STEPS.ADDRESS) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Adres giriniz"
+          subtitle="Lütfen oluşturmak istediğiniz barınma seçeneğinin adresini belirtiniz"
+        />
+        <AddressCity
+          value={cityName}
+          onChange={(value) => setCustomValue("address.cityName", value)}
+        />
+
+        <AddressTown
+          city={cityName}
+          value={townName}
+          onChange={(value) => setCustomValue("address.townName", value)}
+        />
+
+        <AddressDistrict
+          city={cityName}
+          town={townName}
+          value={districtName}
+          onChange={(value) => setCustomValue("address.districtName", value)}
+        />
+
+        <AddressNeighborhood
+          city={cityName}
+          town={townName}
+          district={districtName}
+          value={neighborhoodName}
+          onChange={(value) =>
+            setCustomValue("address.neighborhoodName", value)
+          }
+        />
+
+        <AddressDetails
+          value={details}
+          onChange={(value) => setCustomValue("address.details", value)}
+        />
+
+        <>{JSON.stringify(address)}</>
       </div>
     );
   }
@@ -261,7 +324,8 @@ const RentModal = () => {
     );
   }
 
-  if (step === STEPS.PRICE) {
+  if (step === STEPS.START_AND_END_DATE) {
+    // TODO
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading

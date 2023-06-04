@@ -41,7 +41,7 @@ const Map: React.FC<MapProps> = ({ center, onMarkerPositionChange }) => {
       if (marker && onMarkerPositionChange) {
         const updateMarkerPosition = () => {
           const position = marker.getLatLng();
-          console.log("Marker position:", [position.lat, position.lng]);
+          //console.log("Marker position:", [position.lat, position.lng]);
           onMarkerPositionChange([position.lat, position.lng]);
         };
         marker.on("dragend", updateMarkerPosition);

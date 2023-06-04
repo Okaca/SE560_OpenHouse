@@ -32,14 +32,15 @@ const Modal: React.FC<ModalProps> = ({
 }) => {
   // FC: functional components
   const [showModal, setShowModal] = useState(isOpen);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const prevBodyRef = useRef<React.ReactElement | null>(null);
+
+  useEffect(() => {
+    setShowModal(isOpen);
+  }, [isOpen]);
 
   const handleClose = useCallback(() => {
     if (disabled) {
       return;
     }
-
     setShowModal(false);
     setTimeout(() => {
       onClose();
@@ -50,7 +51,6 @@ const Modal: React.FC<ModalProps> = ({
     if (disabled) {
       return;
     }
-
     onSubmit();
   }, [disabled, onSubmit]);
 
@@ -58,7 +58,6 @@ const Modal: React.FC<ModalProps> = ({
     if (disabled || !secondaryAction) {
       return;
     }
-
     secondaryAction();
   }, [disabled, secondaryAction]);
 
@@ -68,31 +67,11 @@ const Modal: React.FC<ModalProps> = ({
         modalRef.current &&
         !modalRef.current.contains(event.target as Node)
       ) {
-        if (prevBodyRef.current === body) {
-          handleClose();
-        }
+        handleClose();
       }
     },
     [body, handleClose]
   );
-
-  useEffect(() => {
-    setShowModal(isOpen);
-
-    if (showModal) {
-      document.addEventListener("mousedown", handleOutsideClick);
-    } else {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [isOpen, showModal, handleOutsideClick]);
-
-  useEffect(() => {
-    prevBodyRef.current = body;
-  }, [body]);
 
   if (!isOpen) {
     return null;
@@ -116,7 +95,6 @@ const Modal: React.FC<ModalProps> = ({
                 "
       >
         <div
-          ref={modalRef}
           className="
                         relative
                         w-full
