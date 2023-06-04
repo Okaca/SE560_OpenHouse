@@ -133,7 +133,7 @@ const RegisterModal = () => {
       disabled={isLoading}
       isOpen={registerModal.isOpen}
       title="Kayıt Ol" // TODO:
-      actionLabel="Devam Et" // TODO:
+      actionLabel="Kayıt Ol" // TODO:
       onClose={registerModal.onClose}
       onSubmit={handleSubmit(onSubmit)}
       body={bodyContent}

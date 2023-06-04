@@ -117,7 +117,7 @@ const LoginModal = () => {
       disabled={isLoading}
       isOpen={loginModal.isOpen}
       title="Giriş Yap"
-      actionLabel="Devam Et"
+      actionLabel="Giriş Yap"
       onClose={loginModal.onClose}
       onSubmit={handleSubmit(onSubmit)}
       body={bodyContent}

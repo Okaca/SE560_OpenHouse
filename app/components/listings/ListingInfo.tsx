@@ -25,6 +25,8 @@ interface ListingInfoProps {
       }
     | undefined;
   locationValue: number[];
+  startDate: Date;
+  endDate: Date;
 }
 
 const ListingInfo: React.FC<ListingInfoProps> = ({
@@ -35,10 +37,10 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
   bathroomCount,
   category,
   locationValue,
+  startDate,
+  endDate,
 }) => {
-  const { getByValue } = useCountries();
-
-  const coordinates = getByValue(locationValue.toString());
+  const coordinates = locationValue;
 
   return (
     <div className="col-span-4 flex flex-col gap-8">
@@ -69,6 +71,20 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
           <div>{guestCount} misafir</div>
           <div>{roomCount} oda</div>
           <div>{bathroomCount} banyo</div>
+        </div>
+        <div
+          className="
+                        flex
+                        flex-row
+                        items-center
+                        gap-4
+                        text-neutral-700
+                    "
+        >
+          <div>
+            Başlangıç Tarihi: {" " + startDate.toISOString().split("T")[0]}
+          </div>
+          <div>Bitiş Tarihi: {" " + endDate.toISOString().split("T")[0]}</div>
         </div>
       </div>
       <hr />

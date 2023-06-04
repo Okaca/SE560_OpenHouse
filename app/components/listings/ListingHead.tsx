@@ -8,7 +8,7 @@ import HeartButton from "../HeartButton";
 
 interface ListingHeadProps {
   title: string;
-  locationValue: string;
+  locationValue: JSON;
   imageSrc: string;
   id: string;
   currentUser?: SafeUser | null;
@@ -21,13 +21,14 @@ const ListingHead: React.FC<ListingHeadProps> = ({
   id,
   currentUser,
 }) => {
-  const { getByValue } = useCountries();
-
-  const location = getByValue(locationValue);
+  const location = locationValue;
 
   return (
     <>
-      <Heading title={title} subtitle={`${location}`} />
+      <Heading
+        title={title}
+        subtitle={`${location?.cityName}, ${location?.townName}`}
+      />
       <div
         className="
                     w-full

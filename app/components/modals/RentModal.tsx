@@ -81,6 +81,7 @@ const RentModal = () => {
       imageSrc: "",
       title: "",
       description: "",
+      m2: 0,
       startDate: new Date(new Date(Date.now()).toISOString().split("T")[0]),
       endDate: new Date(new Date(Date.now()).toISOString().split("T")[0]),
     },
@@ -88,6 +89,7 @@ const RentModal = () => {
 
   const category = watch("category");
   const location = watch("location");
+  const m2 = watch("m2");
 
   const cityName = watch("address.cityName");
   const townName = watch("address.townName");
@@ -270,6 +272,18 @@ const RentModal = () => {
         <AddressDetails
           value={details}
           onChange={(value) => setCustomValue("address.details", value)}
+        />
+
+        <TextField
+          className="px-8"
+          label="Metrekare"
+          variant="outlined"
+          type="number"
+          value={m2}
+          onChange={(event) => {
+            Number(event.target.value);
+            setCustomValue("m2", Number(event.target.value));
+          }}
         />
 
         <>{JSON.stringify(address)}</>

@@ -18,11 +18,16 @@ L.Icon.Default.mergeOptions({
 });
 
 interface MapProps {
+  scrollWheelZoom?: boolean;
   center?: number[];
   onMarkerPositionChange?: (position: L.LatLngExpression) => void;
 }
 
-const Map: React.FC<MapProps> = ({ center, onMarkerPositionChange }) => {
+const Map: React.FC<MapProps> = ({
+  center,
+  onMarkerPositionChange,
+  scrollWheelZoom,
+}) => {
   const markerRef = useRef<Marker>(null);
   const [zoomLevel, setZoomLevel] = useState<number | null>(null);
 

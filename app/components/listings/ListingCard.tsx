@@ -45,21 +45,13 @@ const ListingCard: React.FC<ListingCardProps> = ({
     [onAction, actionId, disabled]
   );
 
-  const price = useMemo(() => {
-    if (reservation) {
-      return reservation.totalPrice;
-    }
-
-    return "OK";
-  }, [reservation]);
+  const m2 = useMemo(() => {
+    return data.m2;
+  }, []);
 
   const reservationDate = useMemo(() => {
-    if (!reservation) {
-      return null;
-    }
-
-    const start = new Date(reservation.startDate);
-    const end = new Date(reservation.endDate);
+    const start = new Date(data.startDate);
+    const end = new Date(data.endDate);
 
     return `${format(start, "PP")} - ${format(end, "PP")}`;
   }, [reservation]);
@@ -78,8 +70,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
                         w-full
                         relative
                         overflow-hidden
-                        rounded-xl
-                    "
+                        rounded-xl"
         >
           <Image
             fill
@@ -98,14 +89,13 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
         </div>
         <div className="font-semibold text-lg">
-          {data.address.cityName}, {data.address.townName}
+          {data.address?.cityName}, {data.address?.townName}
         </div>
-        <div className="font-light text-neutral-500">
-          {reservationDate || data.category}
-        </div>
+        <div className=" text-neutral-700">{data.category}</div>
+        <div className=" text-neutral-700">{reservationDate}</div>
         <div className="flex flex-row items-center gap-1">
-          <div className="font-semibold">{price}</div>
-          {!reservation && <div className="font-light">gün</div>}
+          <div className="font-semibold">{m2}</div>
+          <div className="font-light">metrekare</div>
         </div>
         {onAction && actionLabel && (
           <Button
