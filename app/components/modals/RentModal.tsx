@@ -46,6 +46,19 @@ const RentModal = () => {
             category: '',
             location: null,
             guestCount: 1,
+            area_m2: 0,
+            modelOfVehicle: '',
+            modelOfTent: '',
+            otelName: '',
+            numOfStarsOfOtel: 0,
+            nameOfCorporation: '',
+            nameOfBuilding: '',
+            nameOfMosque: '',
+            nameOfSehir: '',
+            nameOfIlce: '',
+            nameOfBolge: '',
+            nameOfMahalle: '',
+            detailedAdress: '',
             roomCount: 1,
             bathroomCount: 1,
             imageSrc: '', 
@@ -61,6 +74,8 @@ const RentModal = () => {
     const roomCount = watch('roomCount');
     const bathroomCount = watch('bathroomCount');
     const imageSrc = watch('imageSrc');
+    const area_m2 = watch('area_m2');
+    const numOfStarsOfOtel = watch('numOfStarsOfOtel');
 
     const Map = useMemo(() => dynamic(() => import('../Map'), {
         ssr: false
@@ -172,6 +187,7 @@ const RentModal = () => {
     }
 
     if (step === STEPS.INFO) {
+
         bodyContent = (
             <div className="flex flex-col gap-8">
                 <Heading 
@@ -184,20 +200,49 @@ const RentModal = () => {
                     value={guestCount}
                     onChange={(value) => setCustomValue('guestCount', value)}
                 />
-                <hr />
-                <Counter 
-                    title="Oda"
-                    subtitle="Toplam oda sayısı"
-                    value={roomCount}
-                    onChange={(value) => setCustomValue('roomCount', value)}
-                />
-                <hr />
-                <Counter 
-                    title="Banyo"
-                    subtitle="Toplam banyo sayısı"
-                    value={bathroomCount}
-                    onChange={(value) => setCustomValue('bathroomCount', value)}
-                />
+                <hr /> 
+                {((category !== 'Otomobil') && 
+                (category !== 'Minibüs') && 
+                (category !== 'Otobüs')) && 
+                    <Counter 
+                        title="Oda"
+                        subtitle="Toplam oda sayısı"
+                        value={roomCount}
+                        onChange={(value) => setCustomValue('roomCount', value)}
+                    /> 
+                }
+                {((category !== 'Otomobil') && 
+                (category !== 'Minibüs') && 
+                (category !== 'Otobüs')) && 
+                    <hr /> 
+                }
+                {((category !== 'Otomobil') && 
+                (category !== 'Minibüs') && 
+                (category !== 'Otobüs')) && 
+                    <Counter 
+                        title="Banyo"
+                        subtitle="Toplam banyo sayısı"
+                        value={bathroomCount}
+                        onChange={(value) => setCustomValue('bathroomCount', value)}
+                    />
+                }
+                {((category !== 'Otomobil') && 
+                (category !== 'Minibüs') && 
+                (category !== 'Otobüs')) && 
+                    <hr />
+                }
+                {((category === 'Otomobil') || 
+                (category === 'Minibüs') ||
+                (category === 'Otobüs')) && 
+                    <Input 
+                        id="modelOfVehicle"
+                        label="Aracın Markası" // TODO: 
+                        disabled={isLoading}
+                        register={register}
+                        errors={errors}
+                        required
+                    />
+                }
             </div>
         );
     }

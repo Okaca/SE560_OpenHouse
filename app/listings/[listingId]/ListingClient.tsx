@@ -134,6 +134,19 @@ const ListingClient: React.FC<ListingClientProps> = ({
                             description={listing.description}
                             roomCount={listing.roomCount}
                             guestCount={listing.guestCount}
+                            area_m2={listing.area_m2 !== null ? listing.area_m2 : 0}
+                            modelOfVehicle={listing.modelOfVehicle !== null ? listing.modelOfVehicle : ''}
+                            modelOfTent={listing.modelOfTent !== null ? listing.modelOfTent : ''}
+                            numOfStarsOfOtel={listing.numOfStarsOfOtel !== null ? listing.numOfStarsOfOtel : 0}
+                            otelName={listing.otelName !== null ? listing.otelName : ''}
+                            nameOfCorporation={listing.nameOfCorporation !== null ? listing.nameOfCorporation : ''}
+                            nameOfBuilding={listing.nameOfBuilding !== null ? listing.nameOfBuilding : ''}
+                            nameOfMosque={listing.nameOfMosque !== null ? listing.nameOfMosque : ''}
+                            nameOfSehir={listing.nameOfSehir !== null ? listing.nameOfSehir : ''}
+                            nameOfIlce={listing.nameOfIlce !== null ? listing.nameOfIlce : ''}
+                            nameOfBolge={listing.nameOfBolge !== null ? listing.nameOfBolge : ''}
+                            nameOfMahalle={listing.nameOfMahalle !== null ? listing.nameOfMahalle : ''}
+                            detailedAdress={listing.detailedAdress !== null ? listing.detailedAdress : ''}
                             bathroomCount={listing.bathroomCount}
                             locationValue={listing.locationValue}
                         />
