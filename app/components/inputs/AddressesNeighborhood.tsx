@@ -39,7 +39,7 @@ const AddressNeighborhood: React.FC<AddressNeighborhoodProps> = ({
         }}
         options={neighborhood}
         renderInput={(params) => (
-          <TextField {...params} label="Semt" variant="outlined" fullWidth />
+          <TextField {...params} label="Mahalle" variant="outlined" fullWidth />
         )}
       />
     </div>

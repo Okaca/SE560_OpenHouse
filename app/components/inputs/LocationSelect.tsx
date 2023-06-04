@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import {
   OutlinedInput,
   Button,
@@ -7,6 +7,8 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import { GrLocationPin } from "react-icons/gr";
 
@@ -20,9 +22,9 @@ const LocationSelect: React.FC<LocationSelectProps> = ({ value, onChange }) => {
   const [listPlace, setListPlace] = useState([]);
   const [selectPosition, setSelectPosition] = useState({});
 
-  const handleSearch = () => {
+  const handleSearch = (value: string) => {
     const params = {
-      q: searchText,
+      q: value,
       format: "json",
       addressdetails: 1,
       polygon_geojson: 0,
@@ -56,25 +58,27 @@ const LocationSelect: React.FC<LocationSelectProps> = ({ value, onChange }) => {
     [onChange]
   );
 
+  console.log(searchText);
+
+  useEffect(() => {
+    if (searchText) {
+      handleSearch(searchText);
+    } else {
+      setListPlace([]);
+    }
+  }, [searchText]);
+  console.log(listPlace);
   return (
     <>
       <div className="flex">
         <div className="flex-1">
           <OutlinedInput
-            className="w-5/6"
+            className="w-full"
             value={searchText}
-            onChange={(event) => setSearchText(event.target.value)}
+            onChange={(event) => {
+              setSearchText(event.target.value);
+            }}
           />
-        </div>
-        <div className="flex items-center px-15">
-          <Button
-            variant="contained"
-            color="primary"
-            className="rounded-full px-3 py-2"
-            onClick={handleSearch}
-          >
-            Ara
-          </Button>
         </div>
       </div>
       <div className="max-h-48 overflow-y-auto">

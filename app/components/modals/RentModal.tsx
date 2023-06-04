@@ -24,6 +24,13 @@ import CarMake from "../inputs/CarMake";
 import CarModel from "../inputs/CarModel";
 import CarCategory from "../inputs/CarCategory";
 import { Checkbox, FormControlLabel, TextField } from "@mui/material";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
+import dayjs from "dayjs";
 
 enum STEPS {
   CATEGORY = 0,
@@ -72,9 +79,10 @@ const RentModal = () => {
       roomCount: 1,
       bathroomCount: 1,
       imageSrc: "",
-      price: 1,
       title: "",
       description: "",
+      startDate: new Date(new Date(Date.now()).toISOString().split("T")[0]),
+      endDate: new Date(new Date(Date.now()).toISOString().split("T")[0]),
     },
   });
 
@@ -94,6 +102,9 @@ const RentModal = () => {
   const roomCount = watch("roomCount");
   const bathroomCount = watch("bathroomCount");
   const imageSrc = watch("imageSrc");
+
+  const startDate = watch("startDate");
+  const endDate = watch("endDate");
 
   const Map = useMemo(
     () =>
@@ -204,7 +215,7 @@ const RentModal = () => {
 
   if (step === STEPS.LOCATION) {
     bodyContent = (
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-6">
         <Heading
           title="Konum giriniz"
           subtitle="Lütfen oluşturmak istediğiniz barınma seçeneğinin konumunu belirtiniz"
@@ -308,6 +319,8 @@ const RentModal = () => {
             className="px-8 py-5"
             control={
               <Checkbox
+                icon={<RadioButtonUncheckedIcon />}
+                checkedIcon={<RadioButtonCheckedIcon />}
                 checked={car.isACworking}
                 onChange={(e) => {
                   setCustomValue("car.isACworking", !car.isACworking);
@@ -403,18 +416,21 @@ const RentModal = () => {
       <div className="flex flex-col gap-8">
         <Heading
           title="Süre giriniz"
-          subtitle="Lütfen oluşturmak istediğiniz barınma seçeneği için toplam gün sayısı giriniz"
+          subtitle="Lütfen oluşturmak istediğiniz barınma seçeneği için başlangıç ve bitiş tarihini seçiniz"
         />
-        <Input
-          id="price"
-          label="Gün Sayısı"
-          formatPrice
-          type="number"
-          disabled={isLoading}
-          register={register}
-          errors={errors}
-          required
-        />
+        <div>startDate: {startDate?.toISOString().split("T")[0]}</div>
+        <div>endDate: {endDate?.toISOString().split("T")[0]}</div>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoItem component="DateRangePicker">
+            <DateRangePicker
+              defaultValue={[dayjs(startDate), dayjs(endDate)]}
+              onChange={(value) => {
+                setCustomValue("startDate", value[0]);
+                setCustomValue("endDate", value[1]);
+              }}
+            />
+          </DemoItem>
+        </LocalizationProvider>
       </div>
     );
   }
