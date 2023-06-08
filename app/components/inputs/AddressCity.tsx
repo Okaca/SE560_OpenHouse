@@ -6,9 +6,14 @@ import { TextField, Autocomplete } from "@mui/material";
 interface AddressCityProps {
   value: string;
   onChange: (value: string) => void;
+  error?: boolean;
 }
 
-const AddressCity: React.FC<AddressCityProps> = ({ value, onChange }) => {
+const AddressCity: React.FC<AddressCityProps> = ({
+  value,
+  onChange,
+  error,
+}) => {
   const cities = citiesJSON.map((city) => city.name);
 
   return (
@@ -20,7 +25,13 @@ const AddressCity: React.FC<AddressCityProps> = ({ value, onChange }) => {
         }}
         options={cities}
         renderInput={(params) => (
-          <TextField {...params} label="Şehir" variant="outlined" fullWidth />
+          <TextField
+            {...params}
+            label="Şehir"
+            variant="outlined"
+            fullWidth
+            error={error}
+          />
         )}
       />
     </div>

@@ -30,7 +30,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [wasReserved, setWasReserved] = useState(false);
+  const [wasReserved, setWasReserved] = useState(true);
 
   const category = useMemo(() => {
     return categories.find((item) => item.label === listing.category);
@@ -43,32 +43,32 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
     setIsLoading(true);
 
-    reservations.forEach((reservation: SafeReservation) => {
-      if (reservation.userId === currentUser.id) {
-        setWasReserved(true);
-      }
-    });
-
-    if (wasReserved) {
-      axios
-        .post("/api/reservations", {
-          listingId: listing?.id,
-        })
-        .then(() => {
-          toast.success("Rezervasyon alındı!"); // TODO:
-          // redirect to trips
-          router.push("/reservations");
-        })
-        .catch(() => {
-          toast.error("Bir hata oluştu"); // TODO:
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else {
+    if (
+      reservations.find(
+        (item) =>
+          item.userId === currentUser.id && item.listingId === listing.id
+      )
+    ) {
       toast.error("Başvuru önceden oluşturulmuştur!");
       setIsLoading(false);
+      return;
     }
+
+    axios
+      .post("/api/reservations", {
+        listingId: listing?.id,
+      })
+      .then(() => {
+        toast.success("Rezervasyon alındı!"); // TODO:
+        // redirect to trips
+        router.push("/reservations");
+      })
+      .catch(() => {
+        toast.error("Bir hata oluştu"); // TODO:
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [listing?.id, router, currentUser, loginModal]);
 
   return (
@@ -115,7 +115,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
                 disabled={isLoading}
               />
             </div>
-            <div>
+            {/* <div>
               {reservations[0].listingId}
               <hr />
               {reservations[0].id}
@@ -128,7 +128,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
               <hr />
               {reservations[0].userId}
               {(currentUser?.id === reservations[0].userId).toString()}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

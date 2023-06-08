@@ -76,8 +76,8 @@ const RentModal = () => {
         isACworking: false,
       },
       guestCount: 1,
-      roomCount: 1,
-      bathroomCount: 1,
+      roomCount: 0,
+      bathroomCount: 0,
       imageSrc: "",
       title: "",
       description: "",
@@ -125,10 +125,18 @@ const RentModal = () => {
   };
 
   const onBack = () => {
+    if (step === 4 && category !== ("Otomobil" || "Minibüs" || "Otobüs")) {
+      setStep((value) => value - 2);
+      return;
+    }
     setStep((value) => value - 1);
   };
 
   const onNext = () => {
+    if (step === 2 && category !== ("Otomobil" || "Minibüs" || "Otobüs")) {
+      setStep((value) => value + 2);
+      return;
+    }
     setStep((value) => value + 1);
   };
 
@@ -139,6 +147,12 @@ const RentModal = () => {
     }
     if (step === STEPS.LOCATION && !location) {
       toast.error("Konum seçilmeden ilerlenemez!");
+      return;
+    }
+    console.log("cityName, townName", cityName, townName);
+    console.log("townlenght", townName.length);
+    if (step === STEPS.ADDRESS && !townName) {
+      toast.error("Şehir ve ilçe girilmeden ilerlenemez!");
       return;
     }
     if (step !== STEPS.START_AND_END_DATE) {
@@ -245,12 +259,14 @@ const RentModal = () => {
         <AddressCity
           value={cityName}
           onChange={(value) => setCustomValue("address.cityName", value)}
+          error={cityName ? false : true}
         />
 
         <AddressTown
           city={cityName}
           value={townName}
           onChange={(value) => setCustomValue("address.townName", value)}
+          error={townName ? false : true}
         />
 
         <AddressDistrict
@@ -274,20 +290,6 @@ const RentModal = () => {
           value={details}
           onChange={(value) => setCustomValue("address.details", value)}
         />
-
-        <TextField
-          className="px-8"
-          label="Metrekare"
-          variant="outlined"
-          type="number"
-          value={m2}
-          onChange={(event) => {
-            Number(event.target.value);
-            setCustomValue("m2", Number(event.target.value));
-          }}
-        />
-
-        <>{JSON.stringify(address)}</>
       </div>
     );
   }
@@ -345,8 +347,6 @@ const RentModal = () => {
             label="Klima çalışıyor mu"
           />
         </div>
-
-        <>{JSON.stringify(car)}</>
       </div>
     );
   }
@@ -365,40 +365,45 @@ const RentModal = () => {
           onChange={(value) => setCustomValue("guestCount", value)}
         />
         <hr />
-        <Counter
-          title="Oda"
-          subtitle="Toplam oda sayısı"
-          value={roomCount}
-          onChange={(value) => setCustomValue("roomCount", value)}
-        />
-        <hr />
-        <Counter
-          title="Banyo"
-          subtitle="Toplam banyo sayısı"
-          value={bathroomCount}
-          onChange={(value) => setCustomValue("bathroomCount", value)}
-        />
-        <hr />
-        <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-col">
-            <div className="font-medium">Yaşam Alanı</div>
-            <div className="font-light text-gray-600">
-              Yaşam alanının metrekare büyüklüğü
-            </div>
-          </div>
-          <div className="flex flex-row items-center gap-4">
-            <TextField
-              className="px-8"
-              variant="outlined"
-              type="number"
-              value={m2}
-              onChange={(event) => {
-                Number(event.target.value);
-                setCustomValue("m2", event.target.value);
-              }}
-            />
-          </div>
-        </div>
+        {category !== "Otomobil" &&
+          category !== "Minibüs" &&
+          category !== "Otobüs" && (
+            <>
+              <Counter
+                title="Oda"
+                subtitle="Toplam oda sayısı"
+                value={roomCount}
+                onChange={(value) => setCustomValue("roomCount", value)}
+              />
+              <hr />
+              <Counter
+                title="Banyo"
+                subtitle="Toplam banyo sayısı"
+                value={bathroomCount}
+                onChange={(value) => setCustomValue("bathroomCount", value)}
+              />
+              <hr />
+              <div className="flex flex-row items-center justify-between">
+                <div className="flex flex-col">
+                  <div className="font-medium">Yaşam Alanı</div>
+                  <div className="font-light text-gray-600">
+                    Yaşam alanının metrekare büyüklüğü
+                  </div>
+                </div>
+                <div className="flex flex-row items-center gap-4">
+                  <TextField
+                    className="px-8"
+                    variant="outlined"
+                    type="number"
+                    value={m2}
+                    onChange={(event) => {
+                      setCustomValue("m2", Number(event.target.value));
+                    }}
+                  />
+                </div>
+              </div>
+            </>
+          )}
       </div>
     );
   }

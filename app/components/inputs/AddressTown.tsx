@@ -7,13 +7,19 @@ interface AddressTownProps {
   city: string;
   value: string;
   onChange: (value: string) => void;
+  error?: boolean;
 }
 
 const getByCity = (value: string) => {
   return citiesJSON.find((item) => item.name === value);
 };
 
-const AddressTown: React.FC<AddressTownProps> = ({ city, value, onChange }) => {
+const AddressTown: React.FC<AddressTownProps> = ({
+  city,
+  value,
+  onChange,
+  error,
+}) => {
   const townArrays = getByCity(city);
 
   const towns = townArrays ? townArrays.towns.map((town) => town.name) : [""];
@@ -27,7 +33,13 @@ const AddressTown: React.FC<AddressTownProps> = ({ city, value, onChange }) => {
         }}
         options={towns}
         renderInput={(params) => (
-          <TextField {...params} label="ilçe" variant="outlined" fullWidth />
+          <TextField
+            {...params}
+            label="ilçe"
+            variant="outlined"
+            fullWidth
+            error={error}
+          />
         )}
       />
     </div>
