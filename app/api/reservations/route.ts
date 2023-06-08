@@ -3,43 +3,33 @@ import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 
-export async function POST(
-    request: Request
-) {
-    const currentUser = await getCurrentUser();
+export async function POST(request: Request) {
+  const currentUser = await getCurrentUser();
 
-    if (!currentUser) {
-        return NextResponse.error();
-    }
+  if (!currentUser) {
+    return NextResponse.error();
+  }
 
-    const body = await request.json();
+  const body = await request.json();
 
-    const {
-        listingId,
-        startDate,
-        endDate,
-        totalPrice
-    } = body;
+  const { listingId } = body;
 
-    if (!listingId || !startDate || !endDate || !totalPrice) {
-        return NextResponse.error();
-    }
+  if (!listingId) {
+    return NextResponse.error();
+  }
 
-    const listingAndReservation = await prisma.listing.update({
-        where: {
-            id: listingId
+  const listingAndReservation = await prisma.listing.update({
+    where: {
+      id: listingId,
+    },
+    data: {
+      reservations: {
+        create: {
+          userId: currentUser.id,
         },
-        data: {
-            reservations: {
-                create: {
-                    userId: currentUser.id,
-                    startDate,
-                    endDate,
-                    totalPrice
-                }
-            }
-        }
-    });
+      },
+    },
+  });
 
-    return NextResponse.json(listingAndReservation);
+  return NextResponse.json(listingAndReservation);
 }

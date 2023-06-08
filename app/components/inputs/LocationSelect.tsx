@@ -53,7 +53,8 @@ const LocationSelect: React.FC<LocationSelectProps> = ({ value, onChange }) => {
 
   const handleUpload = useCallback(
     (result: any) => {
-      onChange([result.lat, result.lon]);
+      console.log(typeof result.lat, result.lat, typeof result.lon, result.lon);
+      onChange([Number(result.lat), Number(result.lon)]);
     },
     [onChange]
   );

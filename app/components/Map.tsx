@@ -18,15 +18,15 @@ L.Icon.Default.mergeOptions({
 });
 
 interface MapProps {
-  scrollWheelZoom?: boolean;
+  draggable: boolean;
   center?: number[];
   onMarkerPositionChange?: (position: L.LatLngExpression) => void;
 }
 
 const Map: React.FC<MapProps> = ({
+  draggable,
   center,
   onMarkerPositionChange,
-  scrollWheelZoom,
 }) => {
   const markerRef = useRef<Marker>(null);
   const [zoomLevel, setZoomLevel] = useState<number | null>(null);
@@ -76,7 +76,9 @@ const Map: React.FC<MapProps> = ({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <MapComponent />
-      {center && <Marker draggable={true} position={center} ref={markerRef} />}
+      {center && (
+        <Marker draggable={draggable} position={center} ref={markerRef} />
+      )}
     </MapContainer>
   );
 };

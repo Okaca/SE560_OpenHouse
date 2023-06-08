@@ -3,10 +3,12 @@
 import Button from "../Button";
 
 interface ListingReservationProps {
+  disabled?: boolean;
   onSubmit: () => void;
 }
 
 const ListingReservation: React.FC<ListingReservationProps> = ({
+  disabled,
   onSubmit,
 }) => {
   return (
@@ -27,6 +29,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
 
       <div className="p-4">
         <Button
+          disabled={disabled}
           label={"Rezervasyon Yap"} // TODO: istek gönder gibi bir şeye dönüştürülebilir
           onClick={onSubmit}
         />

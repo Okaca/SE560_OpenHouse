@@ -227,6 +227,7 @@ const RentModal = () => {
           onChange={(value) => setCustomValue("location", value)}
         />
         <Map
+          draggable={true}
           center={location}
           onMarkerPositionChange={(value) => setCustomValue("location", value)}
         />
@@ -377,6 +378,27 @@ const RentModal = () => {
           value={bathroomCount}
           onChange={(value) => setCustomValue("bathroomCount", value)}
         />
+        <hr />
+        <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-col">
+            <div className="font-medium">Yaşam Alanı</div>
+            <div className="font-light text-gray-600">
+              Yaşam alanının metrekare büyüklüğü
+            </div>
+          </div>
+          <div className="flex flex-row items-center gap-4">
+            <TextField
+              className="px-8"
+              variant="outlined"
+              type="number"
+              value={m2}
+              onChange={(event) => {
+                Number(event.target.value);
+                setCustomValue("m2", event.target.value);
+              }}
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -442,6 +464,7 @@ const RentModal = () => {
                 setCustomValue("startDate", value[0]);
                 setCustomValue("endDate", value[1]);
               }}
+              disablePast={true}
             />
           </DemoItem>
         </LocalizationProvider>

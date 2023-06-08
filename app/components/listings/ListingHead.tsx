@@ -1,6 +1,5 @@
 "use client";
 
-import useCountries from "@/app/hooks/useCountries";
 import { SafeUser } from "@/app/types";
 import Heading from "../Heading";
 import Image from "next/image";
@@ -8,7 +7,7 @@ import HeartButton from "../HeartButton";
 
 interface ListingHeadProps {
   title: string;
-  locationValue: JSON;
+  addressCityTown: JSON;
   imageSrc: string;
   id: string;
   currentUser?: SafeUser | null;
@@ -16,18 +15,16 @@ interface ListingHeadProps {
 
 const ListingHead: React.FC<ListingHeadProps> = ({
   title,
-  locationValue,
+  addressCityTown,
   imageSrc,
   id,
   currentUser,
 }) => {
-  const location = locationValue;
-
   return (
     <>
       <Heading
         title={title}
-        subtitle={`${location?.cityName}, ${location?.townName}`}
+        subtitle={`${addressCityTown?.cityName}, ${addressCityTown?.townName}`}
       />
       <div
         className="

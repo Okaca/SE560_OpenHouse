@@ -1,5 +1,6 @@
 "use client";
 
+import getReservations from "@/app/actions/getReservations";
 import Container from "@/app/components/Container";
 import ListingHead from "@/app/components/listings/ListingHead";
 import ListingInfo from "@/app/components/listings/ListingInfo";
@@ -7,19 +8,10 @@ import ListingReservation from "@/app/components/listings/ListingReservation";
 import { categories } from "@/app/components/navbar/Categories";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import { SafeListing, SafeReservation, SafeUser } from "@/app/types";
-import Button from "@mui/material/Button";
 import axios from "axios";
-import { differenceInCalendarDays, eachDayOfInterval } from "date-fns";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Range } from "react-date-range";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
-
-const initialDateRange = {
-  startDate: new Date(),
-  endDate: new Date(),
-  key: "selection",
-};
 
 interface ListingClientProps {
   reservations?: SafeReservation[];
@@ -30,14 +22,19 @@ interface ListingClientProps {
 }
 
 const ListingClient: React.FC<ListingClientProps> = ({
-  listing,
   reservations = [],
+  listing,
   currentUser,
 }) => {
   const loginModal = useLoginModal();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [wasReserved, setWasReserved] = useState(false);
+
+  const category = useMemo(() => {
+    return categories.find((item) => item.label === listing.category);
+  }, [listing.category]);
 
   const onCreateReservation = useCallback(() => {
     if (!currentUser) {
@@ -46,34 +43,33 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
     setIsLoading(true);
 
-    axios
-      .post("/api/reservations", {
-        startDate: listing?.startDate,
-        endDate: listing?.endDate,
-        listingId: listing?.id,
-      })
-      .then(() => {
-        toast.success("Rezervasyon alındı!"); // TODO:
-        router.push("/trips");
-      })
-      .catch(() => {
-        toast.error("Bir hata oluştu"); // TODO:
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [
-    listing?.id,
-    listing?.startDate,
-    listing?.endDate,
-    router,
-    currentUser,
-    loginModal,
-  ]);
+    reservations.forEach((reservation: SafeReservation) => {
+      if (reservation.userId === currentUser.id) {
+        setWasReserved(true);
+      }
+    });
 
-  const category = useMemo(() => {
-    return categories.find((item) => item.label === listing.category);
-  }, [listing.category]);
+    if (wasReserved) {
+      axios
+        .post("/api/reservations", {
+          listingId: listing?.id,
+        })
+        .then(() => {
+          toast.success("Rezervasyon alındı!"); // TODO:
+          // redirect to trips
+          router.push("/reservations");
+        })
+        .catch(() => {
+          toast.error("Bir hata oluştu"); // TODO:
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    } else {
+      toast.error("Başvuru önceden oluşturulmuştur!");
+      setIsLoading(false);
+    }
+  }, [listing?.id, router, currentUser, loginModal]);
 
   return (
     <Container>
@@ -82,7 +78,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
           <ListingHead
             title={listing.title}
             imageSrc={listing.imageSrc}
-            locationValue={listing.address}
+            addressCityTown={listing.address}
             id={listing.id}
             currentUser={currentUser}
           />
@@ -114,7 +110,24 @@ const ListingClient: React.FC<ListingClientProps> = ({
                                 md:col-span-3
                             "
             >
-              <ListingReservation onSubmit={onCreateReservation} />
+              <ListingReservation
+                onSubmit={onCreateReservation}
+                disabled={isLoading}
+              />
+            </div>
+            <div>
+              {reservations[0].listingId}
+              <hr />
+              {reservations[0].id}
+              <hr />
+              {reservations[0].listing.id}
+              <hr />
+              {reservations[0].listing.userId}
+              <hr />
+              {currentUser?.id}
+              <hr />
+              {reservations[0].userId}
+              {(currentUser?.id === reservations[0].userId).toString()}
             </div>
           </div>
         </div>

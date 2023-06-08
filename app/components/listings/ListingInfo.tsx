@@ -98,7 +98,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
       <hr />
       <div className="text-lg font-light text-neutral-500">{description}</div>
       <hr />
-      <Map center={coordinates} />
+      <Map draggable={false} center={coordinates} />
     </div>
   );
 };
