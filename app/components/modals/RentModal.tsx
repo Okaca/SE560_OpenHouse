@@ -149,10 +149,12 @@ const RentModal = () => {
       toast.error("Konum seçilmeden ilerlenemez!");
       return;
     }
-    console.log("cityName, townName", cityName, townName);
-    console.log("townlenght", townName.length);
     if (step === STEPS.ADDRESS && !townName) {
       toast.error("Şehir ve ilçe girilmeden ilerlenemez!");
+      return;
+    }
+    if (step === STEPS.IMAGES && !imageSrc) {
+      toast.error("Fotoğraf eklemeden ilerlenemez!");
       return;
     }
     if (step !== STEPS.START_AND_END_DATE) {
