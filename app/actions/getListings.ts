@@ -30,22 +30,15 @@ export default async function getListings(params: IListingsParams) {
 
     if (cityName) {
       query.address = {
-        equals: {
-          cityName: cityName,
-          townName: "Süleymanpaşa",
-          districtName: "Merkez",
-          neighborhoodName: "Çınarlı Mh.",
-        },
+        equals: { cityName: cityName },
       };
     }
 
-    // if (townName) {
-    //   query.address = {
-    //     equals: [{ townName: townName }],
-    //   };
-    // }
-
-    console.log(query);
+    if (townName) {
+      query.address = {
+        equals: { townName: townName },
+      };
+    }
 
     const listings = await prisma.listing.findMany({
       where: query,

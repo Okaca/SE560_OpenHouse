@@ -1,6 +1,5 @@
 "use client";
 
-import getReservations from "@/app/actions/getReservations";
 import Container from "@/app/components/Container";
 import ListingHead from "@/app/components/listings/ListingHead";
 import ListingInfo from "@/app/components/listings/ListingInfo";
@@ -30,13 +29,12 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [wasReserved, setWasReserved] = useState(true);
 
   const category = useMemo(() => {
     return categories.find((item) => item.label === listing.category);
   }, [listing.category]);
 
-  const onCreateReservation = useCallback(() => {
+  const onCreateReservation = useCallback(async () => {
     if (!currentUser) {
       return loginModal.onOpen();
     }
@@ -54,17 +52,20 @@ const ListingClient: React.FC<ListingClientProps> = ({
       return;
     }
 
-    axios
+    await axios
       .post("/api/reservations", {
         listingId: listing?.id,
+        listingTitle: listing?.title,
+        listingAddress: listing?.address,
+        listingUserMail: listing.user.email,
+        listingUserName: listing.user.name,
       })
       .then(() => {
         toast.success("Rezervasyon alındı!"); // TODO:
-        // redirect to trips
         router.push("/reservations");
       })
       .catch(() => {
-        toast.error("Bir hata oluştu"); // TODO:
+        toast.error("Bir hata oluştu");
       })
       .finally(() => {
         setIsLoading(false);
@@ -115,20 +116,6 @@ const ListingClient: React.FC<ListingClientProps> = ({
                 disabled={isLoading}
               />
             </div>
-            {/* <div>
-              {reservations[0].listingId}
-              <hr />
-              {reservations[0].id}
-              <hr />
-              {reservations[0].listing.id}
-              <hr />
-              {reservations[0].listing.userId}
-              <hr />
-              {currentUser?.id}
-              <hr />
-              {reservations[0].userId}
-              {(currentUser?.id === reservations[0].userId).toString()}
-            </div> */}
           </div>
         </div>
       </div>
