@@ -9,20 +9,9 @@ interface CarModelProps {
   onChange: (value: any) => void;
 }
 
-const bodyStyles = [
-  "Convertible",
-  "Coupe",
-  "Hatchback",
-  "Pickup",
-  "SUV",
-  "Sedan",
-  "Van/Minivan",
-  "Wagon",
-];
-
 const CarModel: React.FC<CarModelProps> = ({ make, model, onChange }) => {
   const carModel = make
-    ? carsJSON.find((item) => item.company === make).model
+    ? carsJSON.find((item) => item.company === make)?.model || [""]
     : [""];
 
   return (
