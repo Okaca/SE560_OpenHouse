@@ -1,14 +1,11 @@
 import React, { useCallback, useState, useEffect } from "react";
 import {
   OutlinedInput,
-  Button,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Divider,
-  Autocomplete,
-  TextField,
 } from "@mui/material";
 import { GrLocationPin } from "react-icons/gr";
 
@@ -20,19 +17,21 @@ interface LocationSelectProps {
 const LocationSelect: React.FC<LocationSelectProps> = ({ value, onChange }) => {
   const [searchText, setSearchText] = useState("");
   const [listPlace, setListPlace] = useState([]);
-  const [selectPosition, setSelectPosition] = useState({});
 
   const handleSearch = (value: string) => {
     const params = {
       q: value,
       format: "json",
-      addressdetails: 1,
-      polygon_geojson: 0,
+      addressdetails: "1",
+      polygon_geojson: "0",
     };
     const queryString = new URLSearchParams(params).toString();
+
+    console.log(queryString);
+
     const requestOptions = {
       method: "GET",
-      redirect: "follow",
+      redirect: "follow" as RequestRedirect,
     };
     fetch(
       `https://nominatim.openstreetmap.org/search?${queryString}`,

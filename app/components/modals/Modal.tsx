@@ -61,18 +61,6 @@ const Modal: React.FC<ModalProps> = ({
     secondaryAction();
   }, [disabled, secondaryAction]);
 
-  const handleOutsideClick = useCallback(
-    (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        handleClose();
-      }
-    },
-    [body, handleClose]
-  );
-
   if (!isOpen) {
     return null;
   }
