@@ -29,6 +29,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
 }) => {
   const router = useRouter();
 
+  const address = JSON.stringify(data.address);
+  const parsedAddress = JSON.parse(address);
+
   const handleCancel = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
@@ -86,7 +89,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
         </div>
         <div className="font-semibold text-lg">
-          {data.address?.cityName}, {data.address?.townName}
+          {parsedAddress.cityName}, {parsedAddress.townName}
         </div>
         <div className=" text-neutral-700">{data.category}</div>
         <div className=" text-neutral-700">{reservationDate}</div>

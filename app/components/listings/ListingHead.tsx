@@ -1,13 +1,13 @@
 "use client";
 
-import { SafeUser } from "@/app/types";
+import { SafeListing, SafeUser } from "@/app/types";
 import Heading from "../Heading";
 import Image from "next/image";
 import HeartButton from "../HeartButton";
 
 interface ListingHeadProps {
   title: string;
-  addressCityTown: JSON;
+  addressCityTown: SafeListing["address"];
   imageSrc: string;
   id: string;
   currentUser?: SafeUser | null;
@@ -20,11 +20,14 @@ const ListingHead: React.FC<ListingHeadProps> = ({
   id,
   currentUser,
 }) => {
+  const address = JSON.stringify(addressCityTown);
+  const parsedAddress = JSON.parse(address);
+
   return (
     <>
       <Heading
         title={title}
-        subtitle={`${addressCityTown?.cityName}, ${addressCityTown?.townName}`}
+        subtitle={`${parsedAddress.cityName}, ${parsedAddress.townName}`}
       />
       <div
         className="
