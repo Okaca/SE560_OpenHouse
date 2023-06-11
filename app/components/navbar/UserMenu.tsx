@@ -121,7 +121,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                 <hr />
                 <MenuItem
                   onClick={() => {
-                    signOut();
+                    signOut({ redirect: false });
                     router.push("/");
                   }}
                   label="Çıkış Yap" // TODO: TR
