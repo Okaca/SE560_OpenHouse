@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import L from "leaflet";
+import L, { LatLngExpression } from "leaflet";
 import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
@@ -28,7 +28,7 @@ const Map: React.FC<MapProps> = ({
   center,
   onMarkerPositionChange,
 }) => {
-  const markerRef = useRef<Marker>(null);
+  const markerRef = useRef<L.Marker>(null);
   const [zoomLevel, setZoomLevel] = useState<number | null>(null);
 
   const MapComponent = () => {
@@ -62,22 +62,24 @@ const Map: React.FC<MapProps> = ({
 
   return (
     <MapContainer
-      center={center || [39.925533, 32.866287]}
+      center={(center as LatLngExpression) || [39.925533, 32.866287]}
       zoom={center ? 10 : 6}
       scrollWheelZoom={true}
       className="h-[40vh] rounded-lg"
-      whenCreated={(map) => {
-        const currentZoomLevel = map.getZoom();
-        setZoomLevel(currentZoomLevel);
-      }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MapComponent />
       {center && (
-        <Marker draggable={draggable} position={center} ref={markerRef} />
+        <>
+          <MapComponent />
+          <Marker
+            draggable={draggable}
+            position={center as LatLngExpression}
+            ref={markerRef}
+          />
+        </>
       )}
     </MapContainer>
   );
