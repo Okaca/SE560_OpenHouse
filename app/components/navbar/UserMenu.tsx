@@ -121,7 +121,9 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                 <hr />
                 <MenuItem
                   onClick={() => {
-                    signOut({ redirect: false });
+                    signOut({
+                      callbackUrl: "https://openhouse-se560.ue.r.appspot.com/",
+                    });
                     router.push("/");
                   }}
                   label="Çıkış Yap" // TODO: TR
