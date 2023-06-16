@@ -121,10 +121,10 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                 <hr />
                 <MenuItem
                   onClick={() => {
-                    signOut({
-                      callbackUrl: "https://openhouse-se560.ue.r.appspot.com/",
+                    signOut().then(() => {
+                      window.location.href =
+                        "https://openhouse-se560.ue.r.appspot.com/";
                     });
-                    router.push("/");
                   }}
                   label="Çıkış Yap" // TODO: TR
                 />
