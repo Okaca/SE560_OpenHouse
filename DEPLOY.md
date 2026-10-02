@@ -22,7 +22,8 @@ project (data in the `mongo-data` volume, not exposed outside Docker).
 
 Needs a **64-bit** Raspberry Pi OS (`uname -m` -> `aarch64`). Check the model with
 `cat /proc/device-tree/model`:
-- **Pi 5**: nothing to do, uses `mongo:7`.
+- **Pi 5**: nothing to do, uses `mongo:8.0`. Keep it pinned; upgrade one major version at a time
+  (switch image, then `setFeatureCompatibilityVersion`), taking a backup first.
 - **Pi 4**: add `MONGO_IMAGE=mongo:4.4.18` to `.env`. MongoDB 5+ needs ARMv8.2, and on a
   Pi 4 it crashes with "Illegal instruction".
 

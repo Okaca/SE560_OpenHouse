@@ -11,8 +11,10 @@ services:
         condition: service_healthy
 
   mongo:
-    # Pi 5: mongo:7. Pi 4: mongo:4.4.18 (newer builds need ARMv8.2, which the Pi 4 CPU lacks)
-    image: ${MONGO_IMAGE:-mongo:7}
+    # Pinned to 8.0: the data's featureCompatibilityVersion is 8.0, so it can't go back to 7,
+    # and a moving tag like mongo:8 can jump releases MongoDB won't upgrade to in one step.
+    # Pi 4: mongo:4.4.18 (newer builds need ARMv8.2, which the Pi 4 CPU lacks)
+    image: ${MONGO_IMAGE:-mongo:8.0}
     container_name: openhouse-mongo
     restart: unless-stopped
     # Prisma needs a replica set for writes; a single-node one is enough
