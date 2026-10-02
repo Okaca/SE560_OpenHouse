@@ -15,7 +15,7 @@ const Avatar: React.FC<AvatarProps> = ({
             height="30"
             width="30"
             alt="Avatar"
-            src={src || "/images/placeholder.jpg"} // TODO: avatar image
+            src={src || `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/images/placeholder.jpg`} // TODO: avatar image
         />
     );
 }

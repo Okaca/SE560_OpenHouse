@@ -34,9 +34,31 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
     rentModal.onOpen();
   }, [currentUser, loginModal, rentModal]);
 
+  // Static page served by a route handler, so it needs a full page load rather than router.push
+  const onArchitecture = useCallback(() => {
+    window.location.href = `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/architecture`;
+  }, []);
+
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
+        <div
+          onClick={onArchitecture}
+          className="
+                        hidden
+                        md:block
+                        text-sm
+                        font-semibold
+                        py-3
+                        px-4
+                        rounded-full
+                        hover:bg-neutral-100
+                        transition
+                        cursor-pointer
+                    "
+        >
+          Architecture
+        </div>
         <div
           onClick={onRent}
           className="
@@ -99,7 +121,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
             {currentUser ? (
               <>
                 <MenuItem
-                  onClick={() => {}}
+                  onClick={onArchitecture}
                   label="Open House Hakkında" // TODO: TR
                 />
                 <MenuItem
@@ -121,16 +143,21 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                 <hr />
                 <MenuItem
                   onClick={() => {
-                    signOut().then(() => {
-                      window.location.href =
-                        "https://openhouse-se560.ue.r.appspot.com/";
-                    });
+                    signOut();
+                    // .then(() => {
+                    //   window.location.href =
+                    //     "https://openhouse-se560.ue.r.appspot.com/";
+                    // });
                   }}
                   label="Çıkış Yap" // TODO: TR
                 />
               </>
             ) : (
               <>
+                <MenuItem
+                  onClick={onArchitecture}
+                  label="Open House Hakkında" // TODO: TR
+                />
                 <MenuItem
                   onClick={loginModal.onOpen}
                   label="Giriş Yap" // TODO: TR

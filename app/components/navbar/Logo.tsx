@@ -13,7 +13,7 @@ const Logo = () => {
             className="hidden md:block cursor-pointer"
             height="100"
             width="175"
-            src="/images/logo_openhouse3.png" // TODO: logo change
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/images/logo_openhouse3.png`} // TODO: logo change
         />    
     );
 }

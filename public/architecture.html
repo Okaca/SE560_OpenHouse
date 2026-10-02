@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OpenHouse Architecture</title>
+    <meta
+      name="description"
+      content="Architecture and technology overview of OpenHouse, a full-stack Next.js listing and reservation platform self-hosted on a Raspberry Pi 5."
+    />
+    <link rel="icon" href="favicon.ico" />
+    <style>
+      :root {
+        --bg: #fafaf9;
+        --surface: #ffffff;
+        --surface-2: #f4f4f2;
+        --text: #1c1c1a;
+        --muted: #63635e;
+        --border: #e4e4e0;
+        --accent: #e11d48;
+        --accent-soft: #fde7ec;
+        --link: #be123c;
+        --chip: #f1f1ee;
+        --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.04);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #121211;
+          --surface: #1b1b1a;
+          --surface-2: #232321;
+          --text: #ededea;
+          --muted: #a3a39d;
+          --border: #30302d;
+          --accent: #fb7185;
+          --accent-soft: #3a1a22;
+          --link: #fda4af;
+          --chip: #282826;
+          --shadow: none;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          16px/1.6 system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+      }
+      a {
+        color: var(--link);
+      }
+      code {
+        font:
+          0.88em ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Consolas,
+          monospace;
+        background: var(--chip);
+        padding: 0.1em 0.35em;
+        border-radius: 4px;
+      }
+      .wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+
+      /* Header */
+      /* header/section/footer also carry .wrap, so use .wrap in the selector to beat its padding */
+      header.wrap {
+        padding-top: 56px;
+        padding-bottom: 48px;
+      }
+      .eyebrow {
+        color: var(--accent);
+        font-weight: 600;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin: 0 0 8px;
+      }
+      h1 {
+        font-size: clamp(2rem, 5vw, 2.8rem);
+        line-height: 1.15;
+        margin: 0 0 16px;
+        letter-spacing: -0.02em;
+      }
+      .lede {
+        font-size: 1.12rem;
+        color: var(--muted);
+        max-width: 68ch;
+        margin: 0 0 24px;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid var(--border);
+        color: var(--text);
+        background: var(--surface);
+      }
+      .btn.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+
+      /* Sections */
+      section.wrap {
+        margin-top: 24px;
+        margin-bottom: 24px;
+        padding-top: 48px;
+        padding-bottom: 24px;
+        border-top: 1px solid var(--border);
+      }
+      h2 {
+        font-size: 1.45rem;
+        margin: 0 0 6px;
+        letter-spacing: -0.01em;
+      }
+      .sub {
+        color: var(--muted);
+        margin: 0 0 24px;
+        max-width: 70ch;
+      }
+      h3 {
+        font-size: 1rem;
+        margin: 0 0 6px;
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+      .grid.cols-3 {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      }
+      .grid.cols-2 {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      }
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      /* Stats */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+        margin-top: 32px;
+      }
+      .stat {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+      }
+      .stat b {
+        display: block;
+        font-size: 1.05rem;
+      }
+      .stat span {
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      /* Architecture diagram */
+      .diagram {
+        display: grid;
+        gap: 0;
+        justify-items: center;
+      }
+      .node {
+        width: 100%;
+        max-width: 560px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 16px;
+        text-align: center;
+        box-shadow: var(--shadow);
+      }
+      .node b {
+        display: block;
+      }
+      .node small {
+        color: var(--muted);
+      }
+      .arrow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: var(--muted);
+        font-size: 0.8rem;
+        padding: 4px 0;
+      }
+      .arrow::before {
+        content: "";
+        width: 2px;
+        height: 18px;
+        background: var(--border);
+      }
+      .arrow::after {
+        content: "";
+        border: 6px solid transparent;
+        border-top-color: var(--muted);
+        border-bottom: 0;
+      }
+      .host {
+        width: 100%;
+        max-width: 760px;
+        border: 2px dashed var(--accent);
+        border-radius: 14px;
+        padding: 28px 16px 16px;
+        position: relative;
+        background: color-mix(in srgb, var(--accent-soft) 40%, transparent);
+      }
+      .host-label {
+        position: absolute;
+        top: -12px;
+        left: 16px;
+        background: var(--bg);
+        color: var(--accent);
+        padding: 0 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+      .containers {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 8px;
+      }
+      .container-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px;
+        height: 100%;
+      }
+      .container-box .tag {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .container-box ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .h-arrow {
+        color: var(--muted);
+        font-size: 0.8rem;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .h-arrow span {
+        display: block;
+        font-size: 1.4rem;
+        line-height: 1;
+        color: var(--muted);
+      }
+      .externals {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        width: 100%;
+        max-width: 760px;
+        margin-top: 4px;
+      }
+      .externals .node {
+        max-width: none;
+      }
+      .ext-title {
+        font-size: 0.8rem;
+        color: var(--muted);
+        text-align: center;
+        margin: 18px 0 8px;
+      }
+
+      /* Tech stack */
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .chip {
+        background: var(--chip);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 3px 12px;
+        font-size: 0.85rem;
+      }
+
+      /* Request flow */
+      ol.flow {
+        counter-reset: step;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+      }
+      ol.flow li {
+        counter-increment: step;
+        position: relative;
+        padding: 14px 16px 14px 56px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+      }
+      ol.flow li::before {
+        content: counter(step);
+        position: absolute;
+        left: 16px;
+        top: 14px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.85rem;
+        display: grid;
+        place-items: center;
+      }
+      ol.flow li span {
+        color: var(--muted);
+      }
+
+      /* Data model */
+      .model {
+        padding: 0;
+        overflow: hidden;
+      }
+      .model h3 {
+        padding: 12px 16px;
+        margin: 0;
+        background: var(--surface-2);
+        border-bottom: 1px solid var(--border);
+      }
+      .model ul {
+        list-style: none;
+        margin: 0;
+        padding: 10px 16px 14px;
+        font-size: 0.9rem;
+      }
+      .model li {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 3px 0;
+      }
+      .model li code {
+        background: none;
+        padding: 0;
+      }
+      .model li span {
+        color: var(--muted);
+        font-size: 0.85rem;
+        text-align: right;
+      }
+
+      footer.wrap {
+        margin-top: 24px;
+        padding-top: 32px;
+        padding-bottom: 56px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 640px) {
+        header.wrap {
+          padding-top: 36px;
+        }
+        section.wrap {
+          margin-top: 16px;
+          margin-bottom: 16px;
+          padding-top: 36px;
+        }
+        .containers {
+          grid-template-columns: 1fr;
+        }
+        .h-arrow span {
+          transform: rotate(90deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="wrap">
+      <p class="eyebrow">Project overview · Architecture</p>
+      <h1>OpenHouse</h1>
+      <p class="lede">
+        A full-stack listing and reservation platform where people offer places
+        to stay and vehicles (homes, tents, containers, caravans, cars, buses
+        and more) and others find them by city and capacity and apply to use
+        them. Built with Next.js and MongoDB, packaged with Docker and
+        self-hosted on a Raspberry Pi 5.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="./">Open the live app</a>
+        <a class="btn" href="#architecture">See the architecture</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <b>Next.js 13 App Router</b><span>React 18 · TypeScript</span>
+        </div>
+        <div class="stat">
+          <b>MongoDB + Prisma</b><span>Typed ORM, replica set</span>
+        </div>
+        <div class="stat">
+          <b>NextAuth</b><span>Google OAuth + email/password</span>
+        </div>
+        <div class="stat">
+          <b>Docker Compose</b><span>Multi-arch image, ARM64</span>
+        </div>
+        <div class="stat">
+          <b>Raspberry Pi 5</b><span>Behind Cloudflare Tunnel</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="wrap">
+        <h2>What it does</h2>
+        <p class="sub">
+          The main user flows, each backed by its own API route and database
+          model.
+        </p>
+        <div class="grid cols-3">
+          <div class="card">
+            <h3>Browse &amp; search</h3>
+            <p>
+              Listings by category on the home page; a search modal filters by
+              province, district and guest capacity through URL query
+              parameters, and the results are rendered on the server.
+            </p>
+          </div>
+          <div class="card">
+            <h3>List a place or vehicle</h3>
+            <p>
+              An 8-step wizard collects category, map location, address, vehicle
+              specs, capacity, photos (uploaded to Cloudinary), description and
+              availability dates.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Apply for a listing</h3>
+            <p>
+              Signed-in users send one application per listing for its
+              availability window; the owner is notified by email and both sides
+              track it in their dashboards.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Accounts</h3>
+            <p>
+              Sign in with Google or register with email and a bcrypt-hashed
+              password. Sessions are stateless JWTs.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Favorites &amp; dashboards</h3>
+            <p>
+              Save listings to favorites; manage <em>My trips</em>,
+              <em>My reservations</em> and <em>My properties</em>. These routes
+              are protected by middleware.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Maps</h3>
+            <p>
+              Leaflet with OpenStreetMap tiles shows each listing's location,
+              with a country and Turkish province/district picker for addresses.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="wrap" id="architecture">
+        <h2>System architecture</h2>
+        <p class="sub">
+          One Docker Compose stack on a Raspberry Pi 5. The app is served under
+          the <code>/openhouse</code> path of my portfolio domain and is never
+          exposed through an open port on my network.
+        </p>
+
+        <div
+          class="diagram"
+          role="img"
+          aria-label="Browser connects through Cloudflare to a Cloudflare Tunnel on a Raspberry Pi 5. On the Pi, a Next.js container talks to a MongoDB container. The app also uses Google OAuth, Cloudinary and SMTP email."
+        >
+          <div class="node">
+            <b>Browser</b
+            ><small>React client components · Tailwind CSS · MUI</small>
+          </div>
+          <div class="arrow">HTTPS</div>
+          <div class="node">
+            <b>Cloudflare</b
+            ><small
+              >DNS, TLS · Tunnel routes <code>/openhouse/*</code> to the
+              Pi</small
+            >
+          </div>
+          <div class="arrow">outbound-only tunnel</div>
+
+          <div class="host">
+            <span class="host-label"
+              >Raspberry Pi 5 · Debian 12 (arm64) · Docker Compose</span
+            >
+            <div class="containers">
+              <div class="container-box">
+                <span class="tag">Container · openhouse</span>
+                <b>Next.js 13 (Node 18)</b>
+                <ul>
+                  <li>Server components &amp; route handlers</li>
+                  <li>NextAuth · route middleware</li>
+                  <li>Prisma Client</li>
+                  <li>Port forwarded</li>
+                </ul>
+              </div>
+              <div class="h-arrow"><span>⇄</span>Prisma</div>
+              <div class="container-box">
+                <span class="tag">Container · mongo</span>
+                <b>MongoDB 7</b>
+                <ul>
+                  <li>Single-node replica set</li>
+                  <li>Persistent Docker volume</li>
+                  <li>Internal network only</li>
+                  <li>Health-checked before app starts</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <p class="ext-title">External services called by the app</p>
+          <div class="externals">
+            <div class="node">
+              <b>Google OAuth</b><small>Sign-in provider</small>
+            </div>
+            <div class="node">
+              <b>Cloudinary</b><small>Image upload &amp; CDN</small>
+            </div>
+            <div class="node">
+              <b>SMTP</b><small>Nodemailer reservation emails</small>
+            </div>
+            <div class="node"><b>OpenStreetMap</b><small>Map tiles</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="wrap">
+        <h2>Technology stack</h2>
+        <p class="sub">What each part of the project is built with.</p>
+        <div class="grid cols-2">
+          <div class="card">
+            <h3>Frontend</h3>
+            <p>
+              Server-rendered pages with client components for interactivity;
+              global UI state for modals.
+            </p>
+            <div class="chips">
+              <span class="chip">Next.js 13 App Router</span
+              ><span class="chip">React 18</span>
+              <span class="chip">TypeScript</span
+              ><span class="chip">Tailwind CSS</span>
+              <span class="chip">Material UI</span
+              ><span class="chip">Zustand</span>
+              <span class="chip">React Hook Form</span
+              ><span class="chip">React Leaflet</span>
+              <span class="chip">react-date-range</span
+              ><span class="chip">MUI Date Pickers</span>
+              <span class="chip">react-hot-toast</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Backend</h3>
+            <p>
+              REST-style route handlers inside the same Next.js app, with
+              server-side data access functions for pages.
+            </p>
+            <div class="chips">
+              <span class="chip">Next.js Route Handlers</span
+              ><span class="chip">NextAuth.js</span>
+              <span class="chip">JWT sessions</span
+              ><span class="chip">bcrypt</span>
+              <span class="chip">Nodemailer</span
+              ><span class="chip">Axios</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Data</h3>
+            <p>
+              Schema-first modelling with generated, fully typed queries and
+              unique indexes enforced by the database.
+            </p>
+            <div class="chips">
+              <span class="chip">MongoDB 7</span
+              ><span class="chip">Prisma ORM</span>
+              <span class="chip">Prisma Adapter for NextAuth</span
+              ><span class="chip">Cloudinary</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>DevOps &amp; hosting</h3>
+            <p>
+              Built once on a PC for amd64 and arm64, pulled and run on the Pi;
+              migrated off MongoDB Atlas to a self-hosted database.
+            </p>
+            <div class="chips">
+              <span class="chip">Docker</span
+              ><span class="chip">Multi-stage build</span>
+              <span class="chip">docker buildx (multi-arch)</span
+              ><span class="chip">Docker Compose</span>
+              <span class="chip">Docker Hub</span
+              ><span class="chip">Cloudflare Tunnel</span>
+              <span class="chip">Raspberry Pi 5</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="wrap">
+        <h2>Life of a reservation</h2>
+        <p class="sub">What happens when a guest applies for a listing.</p>
+        <ol class="flow">
+          <li>
+            <b>View.</b>
+            <span
+              >The listing page is rendered on the server with the listing, its
+              owner, its availability window and its existing
+              reservations.</span
+            >
+          </li>
+          <li>
+            <b>Check.</b>
+            <span
+              >The client opens the login modal for anonymous users and blocks a
+              second application from the same user.</span
+            >
+          </li>
+          <li>
+            <b>Submit.</b>
+            <span
+              >The client posts to <code>/openhouse/api/reservations</code> via
+              an Axios client that prefixes the base path.</span
+            >
+          </li>
+          <li>
+            <b>Authenticate.</b>
+            <span
+              >The route handler reads the NextAuth JWT session to identify the
+              current user and rejects anonymous requests.</span
+            >
+          </li>
+          <li>
+            <b>Persist.</b>
+            <span
+              >Prisma creates the <code>Reservation</code> document, linked to
+              the user and the listing, in MongoDB.</span
+            >
+          </li>
+          <li>
+            <b>Notify.</b>
+            <span
+              >Nodemailer emails the listing's owner about the new
+              booking.</span
+            >
+          </li>
+          <li>
+            <b>Confirm.</b>
+            <span
+              >A toast confirms the request and the guest is taken to their
+              reservations dashboard.</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="wrap">
+        <h2>Data model</h2>
+        <p class="sub">
+          Four Prisma models. Deleting a user or listing cascades to its
+          dependent records.
+        </p>
+        <div class="grid cols-2">
+          <div class="card model">
+            <h3>User</h3>
+            <ul>
+              <li><code>email</code><span>unique</span></li>
+              <li>
+                <code>hashedPassword</code
+                ><span>bcrypt, optional for OAuth users</span>
+              </li>
+              <li><code>favoriteIds</code><span>ObjectId[]</span></li>
+              <li>
+                <code>accounts · listings · reservations</code
+                ><span>relations</span>
+              </li>
+            </ul>
+          </div>
+          <div class="card model">
+            <h3>Account</h3>
+            <ul>
+              <li>
+                <code>provider + providerAccountId</code
+                ><span>unique together</span>
+              </li>
+              <li>
+                <code>access_token · id_token</code><span>OAuth tokens</span>
+              </li>
+              <li><code>user</code><span>→ User</span></li>
+            </ul>
+          </div>
+          <div class="card model">
+            <h3>Listing</h3>
+            <ul>
+              <li><code>title · description · category</code><span></span></li>
+              <li>
+                <code>locationValue · address</code
+                ><span>coordinates + JSON address</span>
+              </li>
+              <li>
+                <code>car · m2</code><span>vehicle specs / floor area</span>
+              </li>
+              <li>
+                <code>guestCount · roomCount · bathroomCount</code><span></span>
+              </li>
+              <li><code>imageSrc</code><span>Cloudinary URL</span></li>
+              <li>
+                <code>startDate · endDate</code><span>availability window</span>
+              </li>
+              <li><code>user · reservations</code><span>relations</span></li>
+            </ul>
+          </div>
+          <div class="card model">
+            <h3>Reservation</h3>
+            <ul>
+              <li><code>user</code><span>→ User (guest)</span></li>
+              <li><code>listing</code><span>→ Listing</span></li>
+              <li><code>createdAt</code><span></span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="wrap">
+        <h2>Engineering decisions</h2>
+        <p class="sub">
+          Choices made to run a production-style deployment on a single-board
+          computer.
+        </p>
+        <div class="grid cols-3">
+          <div class="card">
+            <h3>Served under a sub-path</h3>
+            <p>
+              The app is built with a Next.js <code>basePath</code> of
+              <code>/openhouse</code>, so it lives next to my portfolio on the
+              same domain. API calls go through one Axios client that adds the
+              prefix.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Small, multi-arch image</h3>
+            <p>
+              A three-stage Dockerfile builds Next.js in standalone mode and
+              ships only the traced runtime files, running as a non-root user.
+              buildx publishes amd64 and arm64 images.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Self-hosted database</h3>
+            <p>
+              Migrated from MongoDB Atlas with
+              <code>mongodump</code>/<code>mongorestore</code>. MongoDB runs as
+              a one-node replica set, which Prisma needs for its writes, and is
+              unreachable outside Docker.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Ordered startup</h3>
+            <p>
+              A health check initialises the replica set and reports healthy
+              only once the node is primary. The app waits for it, then runs
+              <code>prisma db push</code> to sync indexes.
+            </p>
+          </div>
+          <div class="card">
+            <h3>No open ports</h3>
+            <p>
+              Cloudflare Tunnel makes an outbound connection from the Pi, so no
+              router port-forwarding is needed and TLS is handled at Cloudflare.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Light on the Pi</h3>
+            <p>
+              Images are already sized by Cloudinary and Google, so the Next.js
+              image optimiser is turned off to save CPU on the device.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="wrap">
+      OpenHouse began as a team project for SE 560 Software Development Studio
+      (METU, Spring 2023), and I later containerised and self-hosted it.
+      <a href="./">Open the app →</a>
+    </footer>
+  </body>
+</html>

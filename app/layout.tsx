@@ -8,10 +8,13 @@ import LoginModal from './components/modals/LoginModal';
 import getCurrentUser from './actions/getCurrentUser';
 import RentModal from './components/modals/RentModal';
 import SearchModal from './components/modals/SearchModal';
+import AuthProvider from './providers/AuthProvider';
 
 export const metadata = {
   title: 'Open House', // TODO: 
-  description: 'SE560 Open House Web App', // TODO: 
+  description: 'SE560 Open House Web App', // TODO:
+  // Lives in public/ rather than app/: Next 13.3's app/favicon.ico route breaks `next build` on Windows
+  icons: { icon: `${process.env.NEXT_PUBLIC_BASE_PATH}/favicon.ico` },
 }
 
 const font = Nunito({
@@ -28,6 +31,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
+        <AuthProvider>
         <ClientOnly>
           <ToasterProvider />
           <SearchModal />
@@ -39,6 +43,7 @@ export default async function RootLayout({
         <div className='pb-20 pt-28'>
           {children}
         </div>
+        </AuthProvider>
         </body>
     </html>
   )

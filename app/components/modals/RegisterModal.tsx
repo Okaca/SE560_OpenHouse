@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import axios from "@/app/libs/axios";
 import { FcGoogle } from "react-icons/fc";
 import { useCallback, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";

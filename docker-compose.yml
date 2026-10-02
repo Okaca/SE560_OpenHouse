@@ -1,0 +1,36 @@
+services:
+  openhouse:
+    image: metu1onurc1/openhouse:latest
+    container_name: openhouse
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "3001:3000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  mongo:
+    # Pi 5: mongo:7. Pi 4: mongo:4.4.18 (newer builds need ARMv8.2, which the Pi 4 CPU lacks)
+    image: ${MONGO_IMAGE:-mongo:7}
+    container_name: openhouse-mongo
+    restart: unless-stopped
+    # Prisma needs a replica set for writes; a single-node one is enough
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    # Not published to the host: only the app container can reach it
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      # Initiates the replica set on first boot; healthy once this node is primary
+      test: >
+        if command -v mongosh >/dev/null; then SH=mongosh; else SH=mongo; fi;
+        $$SH --quiet --eval "var ok; try { ok = rs.status().ok } catch (e) { ok = 0 }
+        if (!ok) rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'mongo:27017' }] });
+        quit(db.isMaster().ismaster ? 0 : 1)"
+      interval: 5s
+      timeout: 10s
+      start_period: 30s
+      retries: 20
+
+volumes:
+  mongo-data:
